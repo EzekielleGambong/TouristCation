@@ -1,0 +1,11 @@
+{
+  "name": "touristcation",
+  "version": "1.0.0",
+  "description": "Guide to tourist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ezi and Jed",
+  "license": "ISC"
+}
