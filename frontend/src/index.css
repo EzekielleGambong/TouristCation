@@ -5,10 +5,13 @@
 /* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # FONTS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
-.dm-sans {
+body {
   font-family: "DM Sans", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
 }
 
 /* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # CUSTOM CSS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
+.bg-color {
+  background-color: rgb(229, 231, 235);
+}
