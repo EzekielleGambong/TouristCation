@@ -1,0 +1,6 @@
+react-router-dom
+
+tailwindcss
+fluid-tailwind
+postcss
+autoprefixer
