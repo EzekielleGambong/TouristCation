@@ -11,7 +11,18 @@ body {
   font-style: normal;
 }
 
+/* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # ICONS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_right_alt,search");
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
 /* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # CUSTOM CSS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
 .bg-color {
   background-color: rgb(229, 231, 235);
+}
+
+.clip-circle {
+  clip-path: circle(5% at 97% 70%);
 }

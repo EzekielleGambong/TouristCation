@@ -11,5 +11,5 @@ module.exports = {
     screens,
     fontSize,
   },
-  plugins: [fluid],
+  plugins: [fluid, require("@tailwindcss/forms")],
 };

@@ -29,18 +29,6 @@ export default function TouristCation() {
           <Route path="/packages" element={<Packages />} />
           <Route path="/gallery" element={<Gallery />} />
         </Route>
-
-        {/* SAMPLE */}
-        {/* <Route path="/user/" element={<LayoutUser />}>
-          <Route path="/user/packages" element={<Packages />} />
-          <Route path="/user/new_client" element={<NewClient />} />
-          <Route path="/user/client_status" element={<ClientStatus />} />
-          <Route path="/user/reports" element={<Reports />} />
-          <Route path="/user/client_history" element={<ClientHistory />} />
-
-          <Route index element={<Error />} />
-          <Route path="/user/*" element={<Error />} />
-        </Route> */}
       </Routes>
     </BrowserRouter>
   );

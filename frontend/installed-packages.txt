@@ -4,3 +4,5 @@ tailwindcss
 fluid-tailwind
 postcss
 autoprefixer
+
+@tailwindcss/forms

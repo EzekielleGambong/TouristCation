@@ -48,13 +48,13 @@ export default function NavbarDefault() {
   ];
 
   return (
-    <nav className="bg-gray-100">
+    <nav className="absolute top-0 w-full bg-gray-100 z-50">
       <div className="2xl:container 2xl:mx-auto py-2 px-2 xl:px-12">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center xl:hidden">
             <button
               type="button"
-              className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="relative inline-flex items-center justify-center rounded-md p-2 text-sky-500 hover:bg-sky-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
               aria-controls="mobile-menu"
               aria-expanded={isOpen}
               onClick={() => setIsOpen(!isOpen)}
@@ -74,7 +74,7 @@ export default function NavbarDefault() {
           <div className="flex flex-1 items-center justify-center xl:justify-between">
             {/* ICON */}
             <div className="flex flex-shrink-0 items-center">
-              <a href="/" className="font-extrabold text-4xl text-sky-500" aria-current={page === "Home" ? "page" : ""}>
+              <a href="/" className="font-extrabold ~text-xl/4xl text-sky-500" aria-current={page === "Home" ? "page" : ""}>
                 TouristCation
               </a>
             </div>
