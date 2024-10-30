@@ -12,10 +12,14 @@ body {
 }
 
 /* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # ICONS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
-@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_right_alt,search");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=arrow_right_alt,search");
+@import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=grid_view,list");
 
+.material-symbols-rounded {
+  font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 100, "opsz" 48;
+}
 .material-symbols-outlined {
-  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  font-variation-settings: "FILL" 1, "wght" 700, "GRAD" 100, "opsz" 48;
 }
 
 /* # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # CUSTOM CSS # ~ ~ ~ ~ ~ # # ~ ~ ~ ~ ~ # */
@@ -23,6 +27,54 @@ body {
   background-color: rgb(229, 231, 235);
 }
 
-.clip-circle {
-  clip-path: circle(5% at 97% 70%);
+/* SELECT */
+select {
+  appearance: none;
+  -webkit-appearance: none; /* for Safari */
+  -moz-appearance: none; /* for Firefox */
+
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='rgba(14,%20165,%20233,%201)' d='M5.5 7l4.5 4.5L14.5 7h-9z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-size: 1.5rem;
+}
+
+/* DATE */
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-year-field,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field {
+  -webkit-appearance: none;
+  display: none;
+}
+
+input[type="date"]:valid::-webkit-datetime-edit-text,
+input[type="date"]:valid::-webkit-datetime-edit-year-field,
+input[type="date"]:valid::-webkit-datetime-edit-month-field,
+input[type="date"]:valid::-webkit-datetime-edit-day-field {
+  -webkit-appearance: auto;
+  display: inline;
+}
+
+.start-date::before {
+  content: "Start date"; /* Custom text */
+  color: #999; /* Placeholder text color */
+  position: absolute;
+}
+.end-date::before {
+  content: "End date"; /* Custom text */
+  color: #999; /* Placeholder text color */
+  position: absolute;
+}
+
+input[type="date"]::before {
+  font-size: clamp(0.75rem /* 12px */, 0.57rem /* 9.12px */ + 0.45vw, 1rem /* 16px */) /* fluid type from 0.75rem at 40rem to 1rem at 96rem */;
+}
+input[type="date"]:valid::before {
+  content: "";
+}
+
+/* RADIO */
+input[type="radio"] {
+  -webkit-appearance: none;
+  display: none;
 }

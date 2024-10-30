@@ -7,27 +7,34 @@ import "./index.css";
 
 // # ~ ~ ~ ~ ~ # LAYOUTS # ~ ~ ~ ~ ~ # //
 import LayoutDefault from "./components/layouts/layout_default";
+import LayoutTitle from "./components/layouts/layout_title";
 
 // # ~ ~ ~ ~ ~ # PAGES # ~ ~ ~ ~ ~ # //
 import Home from "./pages/Home";
-import About from "./pages/About";
-import Accomodations from "./pages/Accomodations";
-import Tours from "./pages/Tours";
-import Packages from "./pages/Packages";
-import Gallery from "./pages/Gallery";
+import Accommodations from "./pages/Accommodations";
+import TouristSpots from "./pages/TouristSpots";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import Modal from "./components/modals/modal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 export default function TouristCation() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/modal" element={<Modal />} />
         <Route path="/" element={<LayoutDefault />}>
           <Route index element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/accomodations" element={<Accomodations />} />
-          <Route path="/tours" element={<Tours />} />
-          <Route path="/packages" element={<Packages />} />
-          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/terms_and_conditions" element={<TermsAndConditions />} />
+          <Route path="/privacy_policy" element={<PrivacyPolicy />} />
+        </Route>
+
+        <Route path="/" element={<LayoutTitle />}>
+          <Route path="/accommodations/" element={<Accommodations />} />
+        </Route>
+
+        <Route path="/accommodations/" element={<LayoutTitle />}>
+          <Route path="/accommodations/tourist-spots/" element={<TouristSpots />} />
         </Route>
       </Routes>
     </BrowserRouter>

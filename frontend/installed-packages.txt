@@ -1,8 +1,11 @@
 react-router-dom
+react-lazy-load-image-component
 
 tailwindcss
+@tailwindcss/forms
 fluid-tailwind
+
 postcss
 autoprefixer
-
-@tailwindcss/forms
+prop-types
+zustand
