@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
 export default function NavbarDefault() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -39,12 +35,12 @@ export default function NavbarDefault() {
 
   // # ~ ~ ~ ~ ~ # NAVIGATIONS # ~ ~ ~ ~ ~ # //
   const Navigations = [
-    { name: "Home", href: "/", current: page === "Home" },
-    { name: "About", href: "/about", current: page === "About" },
-    { name: "Accomodations", href: "/accomodations", current: page === "Accomodations" },
-    { name: "Tours", href: "/tours", current: page === "Tours" },
-    { name: "Packages", href: "/packages", current: page === "Packages" },
-    { name: "Gallery", href: "/gallery", current: page === "Gallery" },
+    // { name: "Home", href: "/", current: page === "Home" },
+    { name: "About", href: "#about", current: page === "About" },
+    { name: "Accomodations", href: "#accomodations", current: page === "Accomodations" },
+    // { name: "Tours", href: "/tours", current: page === "Tours" },
+    // { name: "Packages", href: "/packages", current: page === "Packages" },
+    { name: "Gallery", href: "#gallery", current: page === "Gallery" },
   ];
 
   return (
@@ -86,8 +82,9 @@ export default function NavbarDefault() {
                   <a
                     key={navigation.name}
                     href={navigation.href}
-                    className={classNames(navigation.current ? `underline underline-offset-8 decoration-4 font-bold` : `font-normal`, "text-lg text-sky-500")}
-                    aria-current={navigation.current ? "page" : ""}
+                    // className={classNames(navigation.current ? `underline underline-offset-8 decoration-4 font-bold` : `font-normal`, "text-lg text-sky-500")}
+                    className="font-normal text-lg text-sky-500"
+                    // aria-current={navigation.current ? "page" : ""}
                   >
                     {navigation.name}
                   </a>
@@ -111,8 +108,9 @@ export default function NavbarDefault() {
             <a
               key={navigation.name}
               href={navigation.href}
-              className={classNames(navigation.current ? `bg-sky-500 text-white` : `text-sky-500`, "block rounded-md  px-3 py-2 text-base font-medium")}
-              aria-current={navigation.current ? "page" : ""}
+              // className={classNames(navigation.current ? `bg-sky-500 text-white` : `text-sky-500`, "block rounded-md  px-3 py-2 text-base font-medium")}
+              className="block rounded-md  px-3 py-2 text-base font-medium text-sky-500"
+              // aria-current={navigation.current ? "page" : ""}
             >
               {navigation.name}
             </a>

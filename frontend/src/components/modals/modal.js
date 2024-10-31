@@ -1,0 +1,85 @@
+import { useState } from "react";
+import PropTypes from "prop-types";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+
+export default function Modal({ isOpen, onClose, settings }) {
+  const [rating, setRating] = useState(0); // Stores selected rating
+  const [hover, setHover] = useState(0); // Stores hover rating
+
+  if (!isOpen) return null; // If not open, return nothing
+
+  return (
+    <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+      <div className="fixed inset-0 bg-black/60 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+      <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
+        <div className="flex min-h-full items-center justify-center text-center p-4">
+          <div className="relative transform overflow-hidden sm:w-full sm:max-w-2xl shadow-xl transition-all rounded-lg bg-white text-left sm:my-8">
+            <div className="flex flex-col rounded-xl bg-gray-200">
+              <div className="relative">
+                <LazyLoadImage src="https://picsum.photos/1400/720" width="800" alt="sample" className="h-full aspect-[5/3] object-center" />
+                <button className="absolute top-3 right-3 w-7 h-7 rounded-full transition-all bg-sky-500 hover:bg-sky-700 fill-white p-1" onClick={onClose}>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
+                    <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+                  </svg>
+                </button>
+              </div>
+              <div className="flex flex-col space-y-3 p-6">
+                <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
+                <p className="font-bold ~text-xs/base">
+                  Address: <span className="font-normal">{settings.address}</span>
+                </p>
+                <p className="font-bold ~text-xs/base">
+                  Contact: <span className="font-normal">{settings.contact}</span>
+                </p>
+                <p className="~min-h-16/24 font-normal ~text-xs/base">{settings.description}</p>
+
+                {settings.type === "tourist-spot" && (
+                  <p className="font-bold ~text-xs/base">
+                    Fee: <span className="font-normal">{settings.fee}</span>
+                  </p>
+                )}
+
+                {settings.type === "accommodation" ? (
+                  <button className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4" onClick={onclose}>
+                    Set Accommodation
+                  </button>
+                ) : (
+                  <div className="flex place-content-center space-x-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <span
+                        key={star}
+                        className={`cursor-pointer text-3xl ${star <= (hover || rating) ? "text-yellow-400" : "text-gray-400"}`}
+                        onClick={() => {
+                          setRating(star);
+                          onClose();
+                        }}
+                        onMouseEnter={() => setHover(star)}
+                        onMouseLeave={() => setHover(0)}
+                      >
+                        ★
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+Modal.propTypes = {
+  settings: PropTypes.arrayOf(
+    PropTypes.shape({
+      type: PropTypes.string.isRequired,
+      destination: PropTypes.string.isRequired,
+      address: PropTypes.string.isRequired,
+      contact: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      cost: PropTypes.string.isRequired,
+      rating: PropTypes.number,
+    })
+  ).isRequired,
+};

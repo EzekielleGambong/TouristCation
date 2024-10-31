@@ -1,8 +1,10 @@
+import { LazyLoadImage } from "react-lazy-load-image-component";
+
 export default function FooterDefault() {
   return (
     <>
-      <div id="#contact_us" className="flex flex-col w-full bg-gray-100 mt-8">
-        <img src="https://picsum.photos/1500" alt="sample" className="max-h-[25rem] object-cover object-center" />
+      <section id="contact_us" className="flex flex-col w-full bg-gray-100 mt-8">
+        <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="max-h-[25rem] aspect-[5/2] object-cover object-center" />
 
         <div className="bg-sky-500 text-white p-6 sm:p-16">
           <div className="relative 2xl:container 2xl:mx-auto flex flex-col gap-8 sm:~px-0/36">
@@ -30,21 +32,21 @@ export default function FooterDefault() {
             </div>
 
             {/* CONTACT FORM */}
-            <form className="lg:absolute lg:bottom-0 lg:right-0 lg:w-96 rounded-3xl shadow-2xl bg-white ~p-4/14">
+            <form className="lg:absolute lg:bottom-0 lg:right-0 w-full max-w-96 rounded-3xl shadow-2xl bg-white ~p-4/14">
               <p className="font-bold ~text-lg/2xl text-sky-500">Contact Us</p>
               <p className="font-normal ~text-sm/lg text-gray-400 pb-8">We want to hear from you</p>
 
               <div className="flex flex-col gap-6 pb-8">
-                <input type="text" className="rounded-2xl bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Name" />
-                <input type="email" className="rounded-2xl bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Email" />
-                <textarea className="h-28 rounded-2xl resize-none bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Please type your message here..." />
+                <input type="text" className="rounded-xl bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Name" />
+                <input type="email" className="rounded-xl bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Email" />
+                <textarea className="h-28 rounded-xl resize-none bg-gray-100 border-transparent focus:border-transparent focus:ring-0 text-black" placeholder="Please type your message here..." />
               </div>
 
-              <button className="w-full rounded-full bg-sky-500 hover:bg-sky-700 ~text-sm/lg font-bold text-white p-4">Send message</button>
+              <button className="w-full rounded-full transition-all bg-sky-500 hover:bg-sky-700 font-bold text-white ~text-sm/lg p-4">Send message</button>
             </form>
           </div>
         </div>
-      </div>
+      </section>
 
       <footer className="bg-sky-500">
         <p className="text-white text-center ~text-sm/lg p-6">

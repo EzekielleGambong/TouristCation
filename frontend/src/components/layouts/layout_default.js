@@ -6,8 +6,6 @@ import FooterDefault from "../footers/footer_default";
 export default function LayoutDefault() {
   return (
     <div className="h-screen">
-      <noscript>You need to enable JavaScript to run this app.</noscript>
-
       {/* NAVBAR */}
       <NavbarDefault />
 
