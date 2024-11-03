@@ -94,7 +94,7 @@ export default function NavbarDefault() {
 
             {/* CONTACT */}
             <div className="hidden xl:flex flex-shrink-0 items-center">
-              <a href="/" className="font-bold text-lg text-sky-500">
+              <a href="#contact_us" className="font-bold text-lg text-sky-500">
                 Contact Us
               </a>
             </div>
@@ -116,7 +116,7 @@ export default function NavbarDefault() {
             </a>
           ))}
 
-          <a href="/" className="text-sky-500 block rounded-md  px-3 py-2 text-base font-medium">
+          <a href="#contact_us" className="text-sky-500 block rounded-md  px-3 py-2 text-base font-medium">
             Contact Us
           </a>
         </div>

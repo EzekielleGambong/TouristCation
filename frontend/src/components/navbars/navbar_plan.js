@@ -1,7 +1,7 @@
 export default function NavbarPlan() {
   return (
     <nav className="absolute top-0 w-full bg-gray-100 z-50">
-      <div className="2sm:container 2sm:mx-auto py-2 px-2 sm:px-12">
+      <div className="sm:container sm:mx-auto py-2 px-2 sm:px-12">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">
             <a href="#contact_us">
@@ -20,7 +20,7 @@ export default function NavbarPlan() {
 
             {/* CONTACT */}
             <div className="hidden sm:flex flex-shrink-0 items-center">
-              <a href="/" className="font-bold text-lg text-sky-500">
+              <a href="#contact_us" className="font-bold text-lg text-sky-500">
                 Contact Us
               </a>
             </div>

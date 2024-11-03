@@ -11,8 +11,8 @@ function SelectedAccommodation() {
   const { setAccommodation } = useStorePlan((state) => state);
 
   const handleSetAccommodation = () => {
-    setAccommodation("1"); // Set the value in Zustand store
-    navigate("/accommodations/tourist-spots/"); // Navigate to Page 2
+    setAccommodation("1");
+    navigate("/accommodations/tourist-spots/");
   };
 
   return (
@@ -57,7 +57,8 @@ export default function Accommodations() {
       destination: "Accommodation 1",
       address: "Address of Accommodation 1",
       contact: "Contact of Accommodation 1",
-      description: "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
+      description:
+        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
       cost: "P2,000 - P4,000 per night",
     },
     {
@@ -66,7 +67,8 @@ export default function Accommodations() {
       destination: "Accommodation 2",
       address: "Address of Accommodation 2",
       contact: "Contact of Accommodation 2",
-      description: "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
+      description:
+        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
       cost: "P3,000 - P5,000 per night",
     },
     {
@@ -75,7 +77,8 @@ export default function Accommodations() {
       destination: "Accommodation 3",
       address: "Address of Accommodation 3",
       contact: "Contact of Accommodation 3",
-      description: "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
+      description:
+        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
       cost: "P4,000 - P6,000 per night",
     },
     {
@@ -84,7 +87,8 @@ export default function Accommodations() {
       destination: "Accommodation 4",
       address: "Address of Accommodation 4",
       contact: "Contact of Accommodation 4",
-      description: "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
+      description:
+        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
       cost: "P5,000 - P7,000 per night",
     },
   ];
@@ -105,7 +109,7 @@ export default function Accommodations() {
           <View />
         </div>
 
-        <div className="sm:grid sm:grid-cols-2 gap-4">
+        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
           {cardSettings.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}

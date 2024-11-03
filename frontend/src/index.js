@@ -13,16 +13,15 @@ import LayoutTitle from "./components/layouts/layout_title";
 import Home from "./pages/Home";
 import Accommodations from "./pages/Accommodations";
 import TouristSpots from "./pages/TouristSpots";
+import ItineraryReview from "./pages/ItineraryReview";
 import TermsAndConditions from "./pages/TermsAndConditions";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
-import Modal from "./components/modals/modal";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 export default function TouristCation() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/modal" element={<Modal />} />
         <Route path="/" element={<LayoutDefault />}>
           <Route index element={<Home />} />
           <Route path="/terms_and_conditions" element={<TermsAndConditions />} />
@@ -35,6 +34,10 @@ export default function TouristCation() {
 
         <Route path="/accommodations/" element={<LayoutTitle />}>
           <Route path="/accommodations/tourist-spots/" element={<TouristSpots />} />
+        </Route>
+
+        <Route path="/accommodations/tourist-spots/" element={<LayoutTitle />}>
+          <Route path="/accommodations/tourist-spots/itinerary-review" element={<ItineraryReview />} />
         </Route>
       </Routes>
     </BrowserRouter>

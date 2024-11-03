@@ -11,11 +11,17 @@ export default function LayoutTitle() {
   const location = useLocation();
   useEffect(() => {
     switch (location.pathname) {
+      case "/accommodations":
       case "/accommodations/":
         setPage("Accommodations");
         break;
+      case "/accommodations/tourist-spots":
       case "/accommodations/tourist-spots/":
         setPage("Tourist Spots");
+        break;
+      case "/accommodations/tourist-spots/itinerary-review":
+      case "/accommodations/tourist-spots/itinerary-review/":
+        setPage("Itinerary Review");
         break;
       default:
         setPage("ERROR");
@@ -31,9 +37,9 @@ export default function LayoutTitle() {
       {/* TITLE */}
       <section id="#title" className="pt-20 ~pb-4/8 justify-center items-center">
         <div className="relative">
-          <LazyLoadImage src="https://picsum.photos/2000/720" alt="sample" className="w-full max-h-80 aspect-[5/2] object-cover object-center brightness-50" />
+          <LazyLoadImage src="https://picsum.photos/2000" alt="sample" className="w-full max-h-80 aspect-[5/2] object-cover object-center brightness-50 bg-gray-400" />
 
-          <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 uppercase font-bold ~text-3xl/5xl text-white">{page}</p>
+          <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 uppercase font-bold ~text-3xl/5xl text-center text-white">{page}</p>
         </div>
       </section>
 

@@ -12,11 +12,11 @@ function SelectedTouristSpots() {
 
 function Budget() {
   const navigate = useNavigate();
-  const { setAccommodation } = useStorePlan((state) => state);
+  const { setTouristSpot } = useStorePlan((state) => state);
 
-  const handleSetAccommodation = () => {
-    setAccommodation("1"); // Set the value in Zustand store
-    navigate("/accommodations/tourist-spots/"); // Navigate to Page 2
+  const handleSetTouristSpot = () => {
+    setTouristSpot(["spot 1", "spot 2", "spot 3"]);
+    navigate("/accommodations/tourist-spots/itinerary-review/");
   };
 
   return (
@@ -50,7 +50,7 @@ function Budget() {
         />
       </label>
 
-      <button className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4" onClick={handleSetAccommodation}>
+      <button className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4" onClick={handleSetTouristSpot}>
         Budget
       </button>
     </div>
@@ -76,7 +76,7 @@ export default function TouristSpots() {
 
   const cardSettings = [
     {
-      type: "tourist-spot",
+      type: "tourist_spot",
       id: "1",
       destination: "Tourist Spot 1",
       address: "Address of Tourist Spot 1",
@@ -87,7 +87,7 @@ export default function TouristSpots() {
       rating: 0,
     },
     {
-      type: "tourist-spot",
+      type: "tourist_spot",
       id: "2",
       destination: "Tourist Spot 2",
       address: "Address of Tourist Spot 2",
@@ -98,7 +98,7 @@ export default function TouristSpots() {
       rating: 0,
     },
     {
-      type: "tourist-spot",
+      type: "tourist_spot",
       id: "3",
       destination: "Tourist Spot 3",
       address: "Address of Tourist Spot 3",
@@ -109,7 +109,7 @@ export default function TouristSpots() {
       rating: 0,
     },
     {
-      type: "tourist-spot",
+      type: "tourist_spot",
       id: "4",
       destination: "Tourist Spot 4",
       address: "Address of Tourist Spot 4",
@@ -137,7 +137,7 @@ export default function TouristSpots() {
           <View />
         </div>
 
-        <div className="sm:grid sm:grid-cols-2 gap-4">
+        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
           {cardSettings.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}

@@ -3,8 +3,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 export default function FooterDefault() {
   return (
     <>
-      <section id="contact_us" className="flex flex-col w-full bg-gray-100 mt-8">
-        <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="max-h-[25rem] aspect-[5/2] object-cover object-center" />
+      <section id="contact_us" className="flex flex-col w-full mt-8">
+        <LazyLoadImage src="https://picsum.photos/2000" alt="sample" className="max-h-[25rem] aspect-[5/3] object-cover object-center brightness-50 bg-gray-400" />
 
         <div className="bg-sky-500 text-white p-6 sm:p-16">
           <div className="relative 2xl:container 2xl:mx-auto flex flex-col gap-8 sm:~px-0/36">

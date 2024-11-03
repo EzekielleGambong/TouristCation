@@ -6,6 +6,9 @@ export const useStorePlan = create((set, get) => ({
 
   accommodation: "",
   setAccommodation: (accommodation) => set(() => ({ accommodation: accommodation })),
+
+  touristSpot: [],
+  setTouristSpot: (touristSpot) => set((state) => ({ touristSpot: [...state.touristSpot, touristSpot] })),
 }));
 
 export const useStoreSort = create((set, get) => ({}));
