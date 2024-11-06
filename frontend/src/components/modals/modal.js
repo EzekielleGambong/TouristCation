@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useStorePlan } from "../../hooks/useStore";
+
 import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
@@ -18,7 +20,7 @@ function Accommodation({ settings, onClose }) {
                   </svg>
                 </button>
               </div>
-              <div className="flex flex-col space-y-3 p-6">
+              <div className="flex flex-col space-y-2 p-6">
                 <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
                 <p className="font-bold ~text-xs/base">
                   Address: <span className="font-normal">{settings.address}</span>
@@ -41,8 +43,18 @@ function Accommodation({ settings, onClose }) {
 }
 
 function TouristSpot({ settings, onClose }) {
-  const [rating, setRating] = useState(0); // Stores selected rating
-  const [hover, setHover] = useState(0); // Stores hover rating
+  const { setTouristSpots, touristSpots } = useStorePlan((state) => state);
+
+  const [hover, setHover] = useState(0);
+  const [rating, setRating] = useState(0);
+
+  useEffect(() => {
+    const matchedSpot = touristSpots.find((spot) => spot.id === settings.id);
+
+    if (matchedSpot) {
+      setRating(matchedSpot.rating);
+    }
+  }, [settings.id, touristSpots]);
 
   return (
     <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -59,7 +71,7 @@ function TouristSpot({ settings, onClose }) {
                   </svg>
                 </button>
               </div>
-              <div className="flex flex-col space-y-3 p-6">
+              <div className="flex flex-col space-y-2 p-6">
                 <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
                 <p className="font-bold ~text-xs/base">
                   Address: <span className="font-normal">{settings.address}</span>
@@ -79,7 +91,9 @@ function TouristSpot({ settings, onClose }) {
                       key={star}
                       className={`cursor-pointer text-3xl ${star <= (hover || rating) ? "text-yellow-400" : "text-gray-400"}`}
                       onClick={() => {
-                        setRating(star);
+                        const updatedStar = { ...settings, rating: star };
+                        setTouristSpots(updatedStar);
+
                         onClose();
                       }}
                       onMouseEnter={() => setHover(star)}
@@ -114,22 +128,31 @@ function IteneraryTouristSpot({ settings, onClose }) {
                   </svg>
                 </button>
               </div>
-              <div className="flex flex-col space-y-3 p-6">
+              <div className="flex flex-col space-y-2 p-6">
                 <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
-                <p className="font-bold ~text-xs/base">
-                  Address: <span className="font-normal">{settings.address}</span>
-                </p>
-                <p className="font-bold ~text-xs/base">
-                  Contact: <span className="font-normal">{settings.contact}</span>
-                </p>
+
+                <div className="flex flex-col">
+                  <p className="font-bold ~text-xs/base">
+                    Address: <span className="font-normal">{settings.address}</span>
+                  </p>
+                  <p className="font-bold ~text-xs/base">
+                    Contact: <span className="font-normal">{settings.contact}</span>
+                  </p>
+                </div>
+
                 <p className="font-normal ~text-xs/base">{settings.description}</p>
 
-                <p className="font-bold ~text-xs/base">
-                  Cost: <span className="font-normal">{settings.cost}</span>
-                </p>
-                <p className="font-bold ~text-xs/base">
-                  Budget Allocated: <span className="font-normal">{settings.budget_allocated}</span>
-                </p>
+                <div className="flex flex-col">
+                  <p className="font-bold ~text-xs/base">
+                    Cost: <span className="font-normal">P{settings.cost}</span>
+                  </p>
+                  <p className="font-bold ~text-xs/base">
+                    Budget Allocated: <span className="font-normal">P{settings.budget_allocated}</span>
+                  </p>
+                  <p className="font-bold ~text-xs/base">
+                    Total Budget: <span className="font-normal">P{settings.total_budget}</span>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -153,20 +176,18 @@ export default function Modal({ isOpen, onClose, settings }) {
 }
 
 Modal.propTypes = {
-  settings: PropTypes.arrayOf(
-    PropTypes.shape({
-      type: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
+  settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
 
-      destination: PropTypes.string.isRequired,
-      address: PropTypes.string.isRequired,
-      contact: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
+    destination: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
 
-      cost: PropTypes.string.isRequired,
-      budget_allocated: PropTypes.string,
+    cost: PropTypes.string.isRequired,
+    budget_allocated: PropTypes.string,
 
-      rating: PropTypes.number,
-    })
-  ).isRequired,
+    rating: PropTypes.number,
+  }).isRequired,
 };

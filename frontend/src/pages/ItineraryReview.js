@@ -1,5 +1,7 @@
-import PropTypes from "prop-types";
 import { useStorePlan } from "../hooks/useStore";
+import { Knapsack } from "../hooks/useKnapsack";
+
+import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import CardGrid from "../components/cards/card_grid";
@@ -19,16 +21,14 @@ function AccommodationInformation({ settings }) {
 }
 
 AccommodationInformation.propTypes = {
-  settings: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      data: PropTypes.string.isRequired,
-    })
-  ).isRequired,
+  settings: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    data: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default function ItineraryReview() {
-  const { province } = useStorePlan((state) => state);
+  const { province, touristSpots, budgetCap, wholeBudget } = useStorePlan((state) => state);
   const accommodationInfo = [
     {
       icon: (
@@ -53,52 +53,7 @@ export default function ItineraryReview() {
     },
   ];
 
-  const cardSettings = [
-    {
-      type: "itinerary_tourist_spot",
-      id: "1",
-      destination: "Tourist Spot 1",
-      address: "Address of Tourist Spot 1",
-      contact: "Contact of Tourist Spot 1",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "Free",
-      budget_allocated: "P1000",
-    },
-    {
-      type: "itinerary_tourist_spot",
-      id: "2",
-      destination: "Tourist Spot 2",
-      address: "Address of Tourist Spot 2",
-      contact: "Contact of Tourist Spot 2",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P200",
-      budget_allocated: "P400",
-    },
-    {
-      type: "itinerary_tourist_spot",
-      id: "3",
-      destination: "Tourist Spot 3",
-      address: "Address of Tourist Spot 3",
-      contact: "Contact of Tourist Spot 3",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P50",
-      budget_allocated: "P400",
-    },
-    {
-      type: "itinerary_tourist_spot",
-      id: "4",
-      destination: "Tourist Spot 4",
-      address: "Address of Tourist Spot 4",
-      contact: "Contact of Tourist Spot 4",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P120",
-      budget_allocated: "P200",
-    },
-  ];
+  const cardSettings = Knapsack(touristSpots, wholeBudget, budgetCap);
 
   return (
     <div className="w-full flex flex-col ~space-y-6/8">

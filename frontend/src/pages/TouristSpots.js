@@ -1,32 +1,79 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
+
+import PropTypes from "prop-types";
 
 import Sort from "../components/others/sort";
 import Filter from "../components/others/filter";
 import View from "../components/others/view";
 import CardGrid from "../components/cards/card_grid";
+import Modal from "../components/modals/modal";
 
-function SelectedTouristSpots() {
-  return <button className="rounded-xl transition-all bg-white hover:bg-sky-500 font-medium text-left ~text-xs/base hover:text-white px-3 py-[0.625rem]">Tourist Spot</button>;
+function SelectedTouristSpots({ settings }) {
+  const [isModal, setIsModal] = useState(false);
+  const toggleModal = () => {
+    setIsModal(!isModal);
+  };
+
+  return (
+    <>
+      <button type="button" onClick={toggleModal} className="rounded-xl transition-all bg-white hover:bg-sky-500 font-medium text-left ~text-xs/base hover:text-white px-3 py-[0.625rem]">
+        {settings.destination}
+      </button>
+
+      {isModal && <Modal isOpen={isModal} onClose={toggleModal} settings={settings} />}
+    </>
+  );
 }
+
+SelectedTouristSpots.propTypes = {
+  settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+
+    destination: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+
+    cost: PropTypes.number.isRequired,
+    budget_allocated: PropTypes.string,
+
+    rating: PropTypes.number,
+  }).isRequired,
+};
 
 function Budget() {
   const navigate = useNavigate();
-  const { setTouristSpot } = useStorePlan((state) => state);
+  const { setTouristSpots, setBudgetCap, setWholeBudget, touristSpots, budgetCap, wholeBudget } = useStorePlan((state) => state);
 
-  const handleSetTouristSpot = () => {
-    setTouristSpot(["spot 1", "spot 2", "spot 3"]);
+  useEffect(() => {
+    console.log(touristSpots);
+  }, [touristSpots]);
+
+  const handleSetTouristSpot = (e) => {
+    e.preventDefault();
+
+    if (touristSpots.length === 0) {
+      alert("Please select at least one or more tourist spots you wanted to visit.");
+      return;
+    } else if (budgetCap > wholeBudget) {
+      alert("Budget cap can't be more than the whole budget");
+      return;
+    }
+
     navigate("/accommodations/tourist-spots/itinerary-review/");
   };
 
   return (
-    <div id="selected_accomomdation" className="flex flex-col rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
+    <form id="selected_accomomdation" onSubmit={handleSetTouristSpot} className="flex flex-col rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
       <div className="flex flex-col space-y-1">
         <span className="font-bold ~text-sm/lg">Selected Tourist Spots</span>
         <div className="flex flex-col space-y-1">
-          <SelectedTouristSpots />
-          <SelectedTouristSpots />
-          <SelectedTouristSpots />
+          {touristSpots.map((settings, index) => (
+            <SelectedTouristSpots key={index} settings={settings} />
+          ))}
         </div>
       </div>
 
@@ -34,6 +81,12 @@ function Budget() {
         <span className="font-bold ~text-xs/base">Budget Cap for Tourist Spot</span>
         <input
           type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          onInput={(e) => {
+            e.target.value = e.target.value.replace(/\D/g, "");
+          }}
+          onChange={(e) => setBudgetCap(e.target.value)}
           className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:border-sky-500 focus:ring-0 font-normal ~text-xs/base"
           placeholder="Set your budget cap..."
           required
@@ -44,16 +97,22 @@ function Budget() {
         <span className="font-bold ~text-xs/base">Whole Budget for Entire Tour</span>
         <input
           type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          onInput={(e) => {
+            e.target.value = e.target.value.replace(/\D/g, "");
+          }}
+          onChange={(e) => setWholeBudget(e.target.value)}
           className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:border-sky-500 focus:ring-0 font-normal ~text-xs/base"
           placeholder="Set your whole budget..."
           required
         />
       </label>
 
-      <button className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4" onClick={handleSetTouristSpot}>
+      <button type="submit" className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
         Budget
       </button>
-    </div>
+    </form>
   );
 }
 
@@ -77,46 +136,46 @@ export default function TouristSpots() {
   const cardSettings = [
     {
       type: "tourist_spot",
-      id: "1",
+      id: 1,
       destination: "Tourist Spot 1",
       address: "Address of Tourist Spot 1",
       contact: "Contact of Tourist Spot 1",
       description:
         "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "Free",
+      cost: 0,
       rating: 0,
     },
     {
       type: "tourist_spot",
-      id: "2",
+      id: 2,
       destination: "Tourist Spot 2",
       address: "Address of Tourist Spot 2",
       contact: "Contact of Tourist Spot 2",
       description:
         "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P200",
+      cost: 200,
       rating: 0,
     },
     {
       type: "tourist_spot",
-      id: "3",
+      id: 3,
       destination: "Tourist Spot 3",
       address: "Address of Tourist Spot 3",
       contact: "Contact of Tourist Spot 3",
       description:
         "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P50",
+      cost: 50,
       rating: 0,
     },
     {
       type: "tourist_spot",
-      id: "4",
+      id: 4,
       destination: "Tourist Spot 4",
       address: "Address of Tourist Spot 4",
       contact: "Contact of Tourist Spot 4",
       description:
         "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: "P120",
+      cost: 120,
       rating: 0,
     },
   ];
