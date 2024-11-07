@@ -6,15 +6,23 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import CardGrid from "../components/cards/card_grid";
 
+function formatDate(data) {
+  return new Date(data).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
 function AccommodationInformation({ settings }) {
   return (
-    <div className="flex flex-row space-x-2">
+    <div className="w-full flex flex-row space-x-2">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="~w-5/8 fill-black">
         {settings.icon}
       </svg>
       <div className="flex flex-col">
         <p className="font-normal ~text-xs/base">{settings.title}</p>
-        <p className="font-normal ~text-xs/base">{settings.data}</p>
+        <p className="font-normal ~text-xs/base">{settings.type === "date" ? formatDate(settings.data) : settings.type === "money" ? `P${settings.data}` : settings.data}</p>
       </div>
     </div>
   );
@@ -22,38 +30,58 @@ function AccommodationInformation({ settings }) {
 
 AccommodationInformation.propTypes = {
   settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
-    data: PropTypes.string.isRequired,
+    data: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   }).isRequired,
 };
 
 export default function ItineraryReview() {
-  const { province, touristSpots, budgetCap, wholeBudget } = useStorePlan((state) => state);
+  const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, noOfRooms, touristSpotsBudget, touristSpots, budgetCap } = useStorePlan((state) => state);
+  const cardSettings = Knapsack(touristSpots, touristSpotsBudget, budgetCap);
+
   const accommodationInfo = [
     {
+      type: "date",
       icon: (
         <path d="M438-226 296-368l58-58 84 84 168-168 58 58-226 226ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
       ),
       title: "Check In",
-      data: "00/00/0000",
+      data: stayPeriodFrom,
     },
     {
+      type: "date",
       icon: (
         <path d="m388-212-56-56 92-92-92-92 56-56 92 92 92-92 56 56-92 92 92 92-56 56-92-92-92 92ZM200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-80h80v80h320v-80h80v80h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Z" />
       ),
       title: "Check Out",
-      data: "00/00/0000",
+      data: stayPeriodTo,
     },
     {
+      type: "number",
       icon: (
         <path d="M40-160v-112q0-34 17.5-62.5T104-378q62-31 126-46.5T360-440q66 0 130 15.5T616-378q29 15 46.5 43.5T680-272v112H40Zm720 0v-120q0-44-24.5-84.5T666-434q51 6 96 20.5t84 35.5q36 20 55 44.5t19 53.5v120H760ZM360-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47Zm400-160q0 66-47 113t-113 47q-11 0-28-2.5t-28-5.5q27-32 41.5-71t14.5-81q0-42-14.5-81T544-792q14-5 28-6.5t28-1.5q66 0 113 47t47 113Z" />
       ),
       title: "Travelers",
-      data: "00",
+      data: noOfTravellers,
+    },
+    {
+      type: "number",
+      icon: (
+        <path d="M80-200v-240q0-27 11-49t29-39v-112q0-50 35-85t85-35h160q23 0 43 8.5t37 23.5q17-15 37-23.5t43-8.5h160q50 0 85 35t35 85v112q18 17 29 39t11 49v240h-80v-80H160v80H80Zm440-360h240v-80q0-17-11.5-28.5T720-680H560q-17 0-28.5 11.5T520-640v80Zm-320 0h240v-80q0-17-11.5-28.5T400-680H240q-17 0-28.5 11.5T200-640v80Z" />
+      ),
+      title: "Rooms",
+      data: noOfRooms,
+    },
+    {
+      type: "money",
+      icon: (
+        <path d="M441-120v-86q-53-12-91.5-46T293-348l74-30q15 48 44.5 73t77.5 25q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 42-101t86-41v-84h80v84q50 8 82.5 36.5T651-650l-74 32q-12-32-34-48t-60-16q-44 0-67 19.5T393-614q0 33 30 52t104 40q69 20 104.5 63.5T667-358q0 71-42 108t-104 46v84h-80Z" />
+      ),
+      title: "Excess Budget",
+      data: cardSettings.excessBudget,
     },
   ];
-
-  const cardSettings = Knapsack(touristSpots, wholeBudget, budgetCap);
 
   return (
     <div className="w-full flex flex-col ~space-y-6/8">
@@ -71,16 +99,15 @@ export default function ItineraryReview() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="w-10 fill-black">
               <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
             </svg>
-            <p className="font-bold ~text-xl/3xl">Accommodation</p>
+            <p className="font-bold ~text-xl/3xl">{accommodation.destination}</p>
           </div>
-          <p className="font-normal ~text-base/xl">Address</p>
+          <p className="font-normal ~text-base/xl">{accommodation.address}</p>
         </div>
 
-        <div className="flex flex-row place-items-center ~space-x-2/12">
+        <div className="w-fit grid grid-cols-2 place-items-center ~gap-x-2/4">
           {accommodationInfo.map((settings, index) => (
             <>
               <AccommodationInformation key={index} settings={settings} />
-              {index !== 2 && <hr className="w-0.5 ~h-10/12 border-black border" />}
             </>
           ))}
         </div>
@@ -98,7 +125,7 @@ export default function ItineraryReview() {
         </div>
 
         <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {cardSettings.map((settings, index) => (
+          {cardSettings.settings.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>

@@ -5,6 +5,8 @@ import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 function Accommodation({ settings, onClose }) {
+  const { setAccommodation } = useStorePlan((state) => state);
+
   return (
     <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black/60 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -22,15 +24,26 @@ function Accommodation({ settings, onClose }) {
               </div>
               <div className="flex flex-col space-y-2 p-6">
                 <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
-                <p className="font-bold ~text-xs/base">
-                  Address: <span className="font-normal">{settings.address}</span>
-                </p>
-                <p className="font-bold ~text-xs/base">
-                  Contact: <span className="font-normal">{settings.contact}</span>
-                </p>
+                <div className="flex flex-col">
+                  <p className="font-bold ~text-xs/base">
+                    Address: <span className="font-normal">{settings.address}</span>
+                  </p>
+                  <p className="font-bold ~text-xs/base">
+                    Contact: <span className="font-normal">{settings.contact}</span>
+                  </p>
+                </div>
                 <p className="font-normal ~text-xs/base">{settings.description}</p>
 
-                <button className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4" onClick={onclose}>
+                <p className="text-center font-medium ~text-lg/2xl">P{settings.cost} per night</p>
+
+                <button
+                  type="button"
+                  className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4"
+                  onClick={() => {
+                    setAccommodation(settings);
+                    onClose();
+                  }}
+                >
                   Set Accommodation
                 </button>
               </div>
@@ -93,7 +106,6 @@ function TouristSpot({ settings, onClose }) {
                       onClick={() => {
                         const updatedStar = { ...settings, rating: star };
                         setTouristSpots(updatedStar);
-
                         onClose();
                       }}
                       onMouseEnter={() => setHover(star)}
@@ -185,8 +197,8 @@ Modal.propTypes = {
     contact: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
 
-    cost: PropTypes.string.isRequired,
-    budget_allocated: PropTypes.string,
+    cost: PropTypes.number.isRequired,
+    budget_allocated: PropTypes.number,
 
     rating: PropTypes.number,
   }).isRequired,
