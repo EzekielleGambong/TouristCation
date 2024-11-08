@@ -11,6 +11,8 @@ export default function Home() {
     navigate("/accommodations/");
   };
 
+  
+
   return (
     <>
       <section id="hero" className="~h-[40rem]/[50rem] ~pt-24/28 ~pb-4/8 justify-center items-center">

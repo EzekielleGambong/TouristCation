@@ -1,39 +1,30 @@
-const express = require('express')
-require('dotenv').config()
-const cors = require('cors')
-const app = express()
-const mongoose = require('mongoose')
+import express from "express"
+import { PORT, mongoDBURL } from "./config.js"
+import mongoose from 'mongoose';
+import accRoute from "./routes/accommodationRoute.js"
+const app = express();
+import cors from 'cors';
 
-app.use(express.json({ limit: '50mb' }));
-app.use(cors())
-app.get('/', (req, res) => {
-    res.send('Try')
-})
+app.use(express.json());
+app.use(cors());
+app.use('/accommodation', accRoute);
 
-// const userRoutes = require('./routes/user.router')
-// // Assuming the User model is in './models/user.model'
-// const User = require('./models/user.model');
-
-
-// app.use('/users', userRoutes)
+app.get('/', (request, response) => {
+    console.log(request);
+    return response.status(234).send('Success');
+  });
 
 
-mongoose.connect(process.env.CONNECTION_STRING,
-    {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    }
-)
 
-const db = mongoose.connection;
 
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", function () {
-    console.log("Database connected successfully")
-})
-
-app.listen(process.env.PORT, () => {
-    console.log(`app listening to port ${process.env.PORT}`);
-
-})
-
+mongoose
+  .connect(mongoDBURL)
+  .then(() => {
+    console.log('App connected to database');
+    app.listen(PORT, () => {
+      console.log(`App is listening to port: ${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.log(error);
+  });

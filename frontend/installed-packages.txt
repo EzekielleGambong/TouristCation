@@ -9,6 +9,7 @@ postcss
 autoprefixer
 prop-types
 zustand
+axios
 
 npm install react-router-dom react-lazy-load-image-component prop-types zustand
 npm install tailwindcss@latest postcss@latest autoprefixer@latest @tailwindcss/forms fluid-tailwind
