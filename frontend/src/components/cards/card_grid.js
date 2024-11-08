@@ -16,7 +16,7 @@ function Accommodation({ settings, isModal, toggleModal }) {
           <p className="~min-h-16/24 line-clamp-4 font-normal ~text-xs/base">{settings.description}</p>
         </div>
 
-        <p className="text-center font-medium ~text-lg/2xl">{settings.cost}</p>
+        <p className="text-center font-medium ~text-lg/2xl">P{settings.cost} per night</p>
         <button type="button" onClick={toggleModal} className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
           More information
         </button>
@@ -111,8 +111,8 @@ CardGrid.propTypes = {
     contact: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
 
-    cost: PropTypes.string.isRequired,
-    budget_allocated: PropTypes.string,
+    cost: PropTypes.number.isRequired,
+    budget_allocated: PropTypes.number,
 
     rating: PropTypes.number,
   }).isRequired,

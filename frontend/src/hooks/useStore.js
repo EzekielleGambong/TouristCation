@@ -3,12 +3,31 @@ import { create } from "zustand";
 export const useStorePlan = create((set, get) => ({
   province: "",
   accommodation: "",
+  stayPeriodFrom: "",
+  stayPeriodTo: "",
+  noOfTravellers: 1,
+  noOfRooms: 1,
+  wholeBudget: "",
+  accommodationBudget: "",
+  touristSpotsBudget: "",
   touristSpots: [],
   budgetCap: "",
-  wholeBudget: "",
 
   setProvince: (province) => set(() => ({ province: province })),
   setAccommodation: (accommodation) => set(() => ({ accommodation: accommodation })),
+  setStayPeriodFrom: (stayPeriodFrom) => set(() => ({ stayPeriodFrom: stayPeriodFrom })),
+  setStayPeriodTo: (stayPeriodTo) => set(() => ({ stayPeriodTo: stayPeriodTo })),
+  setNoOfTravellers: (noOfTravellers) =>
+    set((state) => ({
+      noOfTravellers: typeof noOfTravellers === "function" ? noOfTravellers(state.noOfTravellers) : noOfTravellers,
+    })),
+  setNoOfRooms: (noOfRooms) =>
+    set((state) => ({
+      noOfRooms: typeof noOfRooms === "function" ? noOfRooms(state.noOfRooms) : noOfRooms,
+    })),
+  setWholeBudget: (wholeBudget) => set(() => ({ wholeBudget: wholeBudget })),
+  setAccommodationBudget: (accommodationBudget) => set(() => ({ accommodationBudget: accommodationBudget })),
+  setTouristSpotsBudget: (touristSpotsBudget) => set(() => ({ touristSpotsBudget: touristSpotsBudget })),
   setTouristSpots: (newSpot) =>
     set((state) => {
       const existingIndex = state.touristSpots.findIndex((spot) => spot.id === newSpot.id);
@@ -35,5 +54,4 @@ export const useStorePlan = create((set, get) => ({
       }
     }),
   setBudgetCap: (budgetCap) => set(() => ({ budgetCap: budgetCap })),
-  setWholeBudget: (wholeBudget) => set(() => ({ wholeBudget: wholeBudget })),
 }));

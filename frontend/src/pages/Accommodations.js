@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
-import axios from 'axios';
+
 import PropTypes from "prop-types";
 
 import Sort from "../components/others/sort";
@@ -15,23 +15,6 @@ function SelectedAccommodation({ settings }) {
   const toggleModal = () => {
     setIsModal(!isModal);
   };
-
-  const [books, setBooks] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get('http://localhost:5555/accommodation')
-      .then((response) => {
-        setBooks(response.data.data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        setLoading(false);
-      });
-  }, []);
 
   return (
     <>

@@ -44,13 +44,9 @@ SelectedTouristSpots.propTypes = {
   }).isRequired,
 };
 
-function Budget() {
+function Plan() {
   const navigate = useNavigate();
-  const { setTouristSpots, setBudgetCap, setWholeBudget, touristSpots, budgetCap, wholeBudget } = useStorePlan((state) => state);
-
-  useEffect(() => {
-    console.log(touristSpots);
-  }, [touristSpots]);
+  const { setBudgetCap, touristSpotsBudget, touristSpots, budgetCap } = useStorePlan((state) => state);
 
   const handleSetTouristSpot = (e) => {
     e.preventDefault();
@@ -58,7 +54,7 @@ function Budget() {
     if (touristSpots.length === 0) {
       alert("Please select at least one or more tourist spots you wanted to visit.");
       return;
-    } else if (budgetCap > wholeBudget) {
+    } else if (budgetCap > touristSpotsBudget) {
       alert("Budget cap can't be more than the whole budget");
       return;
     }
@@ -67,9 +63,14 @@ function Budget() {
   };
 
   return (
-    <form id="selected_accomomdation" onSubmit={handleSetTouristSpot} className="flex flex-col rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
+    <form id="selected_tourist_spots" onSubmit={handleSetTouristSpot} className="flex flex-col rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
+      <label className="flex flex-col space-y-1">
+        <span className="font-bold ~text-xs/base">Tourist Spots Budget</span>
+        <input type="text" className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:ring-0 font-normal ~text-xs/base" value={touristSpotsBudget} readOnly />
+      </label>
+
       <div className="flex flex-col space-y-1">
-        <span className="font-bold ~text-sm/lg">Selected Tourist Spots</span>
+        <span className="font-bold ~text-xs/base">Selected Tourist Spots</span>
         <div className="flex flex-col space-y-1">
           {touristSpots.map((settings, index) => (
             <SelectedTouristSpots key={index} settings={settings} />
@@ -89,22 +90,6 @@ function Budget() {
           onChange={(e) => setBudgetCap(e.target.value)}
           className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:border-sky-500 focus:ring-0 font-normal ~text-xs/base"
           placeholder="Set your budget cap..."
-          required
-        />
-      </label>
-
-      <label className="flex flex-col space-y-1">
-        <span className="font-bold ~text-xs/base">Whole Budget for Entire Tour</span>
-        <input
-          type="text"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          onInput={(e) => {
-            e.target.value = e.target.value.replace(/\D/g, "");
-          }}
-          onChange={(e) => setWholeBudget(e.target.value)}
-          className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:border-sky-500 focus:ring-0 font-normal ~text-xs/base"
-          placeholder="Set your whole budget..."
           required
         />
       </label>
@@ -131,7 +116,7 @@ export default function TouristSpots() {
       text: "Sort 3",
     },
   ];
-  const { province } = useStorePlan((state) => state);
+  const { province, setTouristSpotsBudget } = useStorePlan((state) => state);
 
   const cardSettings = [
     {
@@ -184,14 +169,14 @@ export default function TouristSpots() {
     <>
       <section className="basis-1/3 w-full ~space-y-4/8">
         <Sort settings={sortSettings} />
-        <div className="lg:sticky top-4 ~space-y-2/3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <Filter FilterOptions={[0]} />
-          <Budget />
+          <Plan />
         </div>
       </section>
 
       <section className="w-full ~space-y-4/8">
-        <div className="h-16 flex flex-row items-center">
+        <div className="h-fit lg:h-16 flex flex-row items-center">
           <p className="w-full font-bold ~text-2xl/4xl text-sky-500">{province}</p>
           <View />
         </div>
