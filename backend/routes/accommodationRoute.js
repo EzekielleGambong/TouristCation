@@ -3,7 +3,6 @@ import { Accommodationinformation } from '../models/accommodationModels.js';
 
 const router = express.Router();
 
-// Route for Save a new Book
 router.post('/', async (request, response) => {
   try {
     if (
@@ -15,29 +14,29 @@ router.post('/', async (request, response) => {
         message: 'Send all required fields: title, author, publishYear',
       });
     }
-    const newBook = {
+    const newAcco = {
       title: request.body.title,
       author: request.body.author,
       publishYear: request.body.publishYear,
     };
 
-    const book = await Accommodationinformation.create(newBook);
+    const acco = await Accommodationinformation.create(newAcco);
 
-    return response.status(201).send(book);
+    return response.status(201).send(acco);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
 
-// Route for Get All Books from database
+
 router.get('/', async (request, response) => {
   try {
-    const books = await Accommodationinformation.find({});
+    const acco = await Accommodationinformation.find({});
 
     return response.status(200).json({
-      count: books.length,
-      data: books,
+      count: acco.length,
+      data: acco,
     });
   } catch (error) {
     console.log(error.message);
@@ -45,7 +44,7 @@ router.get('/', async (request, response) => {
   }
 });
 
-// Route for Get One Book from database by id
+
 router.get('/:id', async (request, response) => {
   try {
     const { id } = request.params;
@@ -59,7 +58,7 @@ router.get('/:id', async (request, response) => {
   }
 });
 
-// Route for Update a Book
+
 router.put('/:id', async (request, response) => {
   try {
     if (
@@ -87,7 +86,7 @@ router.put('/:id', async (request, response) => {
   }
 });
 
-// Route for Delete a book
+
 router.delete('/:id', async (request, response) => {
   try {
     const { id } = request.params;

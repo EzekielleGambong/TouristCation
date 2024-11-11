@@ -1,10 +1,43 @@
 import { useStorePlan } from "../hooks/useStore";
 import { Knapsack } from "../hooks/useKnapsack";
 
+import React, { useCallback, useMemo, useState } from 'react';
+import { GoogleMap,MarkerF, useJsApiLoader } from '@react-google-maps/api';
+
 import PropTypes from "prop-types";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import CardGrid from "../components/cards/card_grid";
+
+const containerStyle = {
+  width: '100%',
+  height: '400px',
+};
+
+const center = {
+  lat: 16.326855,
+  lng: 120.3625725,
+};
+const zoom = 12;
+const points = [
+  {
+    lat: 16.30637,
+    lng: 120.37398
+  },
+  {
+    lat: 16.35344,
+    lng: 120.34065
+  },
+  {
+    lat: 16.32242,
+    lng: 120.36701
+  },
+  {
+    lat: 16.32319,
+    lng: 120.36665
+  }
+]
+
 
 function formatDate(data) {
   return new Date(data).toLocaleDateString("en-US", {
@@ -82,13 +115,47 @@ export default function ItineraryReview() {
       data: cardSettings.excessBudget,
     },
   ];
+  const options = useMemo(() => ({
+    id: 'google-map-script',
+    googleMapsApiKey: 'AIzaSyALxxaseN-mHW6PereNm-dNZl2pxAvnLfw', 
+    libraries: ['maps'],
+    language: 'en',
+    region: '',
+  }), []);
 
+  const { isLoaded, loadError } = useJsApiLoader(options);
+
+  const [map, setMap] = useState(null);
+
+  const onLoad = useCallback((map) => {
+    const bounds = new window.google.maps.LatLngBounds(center);
+    map.fitBounds(bounds);
+    setMap(map);
+  }, []);
+
+  const onUnmount = useCallback(() => {
+    setMap(null);
+  }, []);
+
+  if (loadError) return <div>Error loading Google Maps API</div>;
   return (
     <div className="w-full flex flex-col ~space-y-6/8">
-      <section className="relative">
-        <LazyLoadImage src="https://picsum.photos/2000" alt="sample" className="w-full min-h-60 aspect-[5/2] object-cover object-center brightness-50" />
-
-        <p className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 uppercase font-bold ~text-3xl/5xl text-center text-white">Map Here</p>
+      <section className="map-section">
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={zoom}
+            onLoad={onLoad}
+            onUnmount={onUnmount}
+          >
+            {points.map((point, i) => (
+              <MarkerF key={i} position={point} />
+            ))}
+          </GoogleMap>
+        ) : (
+          <div>Loading Map...</div>
+        )}
       </section>
 
       <section className="flex flex-col ~space-y-1/2">

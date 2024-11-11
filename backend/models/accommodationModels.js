@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const bookSchema = mongoose.Schema(
+const accoSchema = mongoose.Schema(
   {
     Name_of_Establishments: {
       type: String,
@@ -69,4 +69,4 @@ const bookSchema = mongoose.Schema(
   }
 );
 
-export const Accommodationinformation = mongoose.model('Accommodationinformation', bookSchema);
+export const Accommodationinformation = mongoose.model('Accommodationinformation', accoSchema);

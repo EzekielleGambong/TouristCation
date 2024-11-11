@@ -239,7 +239,7 @@ export default function Accommodations() {
       type: "accommodation",
       id: 1,
       destination: "Accommodation 1",
-      address: "Address of Accommodation 1",
+      address: "Address of Accommodation asd1",
       contact: "Contact of Accommodation 1",
       description:
         "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
@@ -267,7 +267,7 @@ export default function Accommodations() {
     },
     {
       type: "accommodation",
-      id: 4,
+      id: 1,
       destination: "Accommodation 4",
       address: "Address of Accommodation 4",
       contact: "Contact of Accommodation 4",
