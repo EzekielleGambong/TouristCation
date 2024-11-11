@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
 
@@ -8,6 +8,7 @@ import Sort from "../components/others/sort";
 import Filter from "../components/others/filter";
 import View from "../components/others/view";
 import CardGrid from "../components/cards/card_grid";
+import Pagination from "../components/cards/pagination";
 import Modal from "../components/modals/modal";
 
 function SelectedAccommodation({ settings }) {
@@ -28,15 +29,15 @@ function SelectedAccommodation({ settings }) {
   );
 }
 
+
 SelectedAccommodation.propTypes = {
   settings: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
 
-    destination: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    Province: PropTypes.string.isRequired,
+    City: PropTypes.string.isRequired,
+    AE_Status: PropTypes.string.isRequired,
+    Main_Type: PropTypes.string.isRequired,
 
     cost: PropTypes.number.isRequired,
     budget_allocated: PropTypes.string,
@@ -233,49 +234,32 @@ export default function Accommodations() {
     },
   ];
   const { province } = useStorePlan((state) => state);
+  const [accommodations, setAccommodations] = useState([]);
 
-  const cardSettings = [
-    {
-      type: "accommodation",
-      id: 1,
-      destination: "Accommodation 1",
-      address: "Address of Accommodation asd1",
-      contact: "Contact of Accommodation 1",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 2000,
-    },
-    {
-      type: "accommodation",
-      id: 2,
-      destination: "Accommodation 2",
-      address: "Address of Accommodation 2",
-      contact: "Contact of Accommodation 2",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 3000,
-    },
-    {
-      type: "accommodation",
-      id: 3,
-      destination: "Accommodation 3",
-      address: "Address of Accommodation 3",
-      contact: "Contact of Accommodation 3",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 4000,
-    },
-    {
-      type: "accommodation",
-      id: 1,
-      destination: "Accommodation 4",
-      address: "Address of Accommodation 4",
-      contact: "Contact of Accommodation 4",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 5000,
-    },
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 2;
+
+  useEffect(() => {
+    const fetchAccommodations = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/accommodation');
+        const data = await response.json();
+        setAccommodations(data);
+      } catch (error) {
+        console.error('Error fetching accommodations:', error);
+      }
+    };
+
+    fetchAccommodations();
+  }, []);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
 
   return (
     <>
@@ -294,11 +278,18 @@ export default function Accommodations() {
         </div>
 
         <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
-          {cardSettings.map((settings, index) => (
+          {accommodations.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>
+        <Pagination
+        totalItems={accommodations.length}
+        itemsPerPage={itemsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
       </section>
+      
     </>
   );
 }

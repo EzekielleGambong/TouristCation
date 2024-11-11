@@ -23,16 +23,16 @@ function Accommodation({ settings, onClose }) {
                 </button>
               </div>
               <div className="flex flex-col space-y-2 p-6">
-                <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
+                <p className="font-bold ~text-lg/2xl">{settings.Province}</p>
                 <div className="flex flex-col">
                   <p className="font-bold ~text-xs/base">
-                    Address: <span className="font-normal">{settings.address}</span>
+                    Address: <span className="font-normal">{settings.City}</span>
                   </p>
                   <p className="font-bold ~text-xs/base">
-                    Contact: <span className="font-normal">{settings.contact}</span>
+                    Contact: <span className="font-normal">{settings.AE_Status}</span>
                   </p>
                 </div>
-                <p className="font-normal ~text-xs/base">{settings.description}</p>
+                <p className="font-normal ~text-xs/base">{settings.Main_Type}</p>
 
                 <p className="text-center font-medium ~text-lg/2xl">P{settings.cost} per night</p>
 

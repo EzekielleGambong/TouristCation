@@ -34,10 +34,7 @@ router.get('/', async (request, response) => {
   try {
     const acco = await Accommodationinformation.find({});
 
-    return response.status(200).json({
-      count: acco.length,
-      data: acco,
-    });
+    return response.status(200).json(acco);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });

@@ -12,7 +12,7 @@ function Accommodation({ settings, isModal, toggleModal }) {
 
       <div className="bg-white p-3 space-y-2">
         <div className="space-y-3">
-          <p className="font-bold ~text-sm/lg">{settings.destination}</p>
+          <p className="font-bold ~text-sm/lg">{settings.City}</p>
           <p className="~min-h-16/24 line-clamp-4 font-normal ~text-xs/base">{settings.description}</p>
         </div>
 
