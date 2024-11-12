@@ -7,16 +7,16 @@ import Modal from "../modals/modal";
 
 function Accommodation({ settings, isModal, toggleModal }) {
   return (
-    <div className="flex-grow max-w-[1/2] flex flex-col rounded-xl overflow-hidden">
-      <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
+    <div className="flex-grow w-full max-w-[48%] flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200">
+      <LazyLoadImage src={settings.link} alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
 
       <div className="bg-white p-3 space-y-2">
         <div className="space-y-3">
-          <p className="font-bold ~text-sm/lg">{settings.City}</p>
+          <p className="font-bold ~text-sm/lg"> {`${settings.nameOfEstablishments}: ${settings.room}`}</p>
           <p className="~min-h-16/24 line-clamp-4 font-normal ~text-xs/base">{settings.description}</p>
         </div>
 
-        <p className="text-center font-medium ~text-lg/2xl">P{settings.cost} per night</p>
+        <p className="text-center font-medium ~text-lg/2xl">P{settings.price} per night</p>
         <button type="button" onClick={toggleModal} className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
           More information
         </button>

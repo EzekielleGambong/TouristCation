@@ -20,8 +20,8 @@ function SelectedAccommodation({ settings }) {
   return (
     <>
       <div onClick={toggleModal} className="rounded-xl transition-all bg-white hover:bg-sky-500 hover:text-white p-3">
-        <p className="font-bold ~text-sm/lg">{settings.destination}</p>
-        <p className="font-normal ~text-xs/base">P{settings.cost} per night</p>
+        <p className="font-bold ~text-sm/lg">{settings.price}</p>
+        <p className="font-normal ~text-xs/base">P{settings.price} per night</p>
       </div>
 
       {isModal && <Modal isOpen={isModal} onClose={toggleModal} settings={settings} />}
@@ -34,12 +34,14 @@ SelectedAccommodation.propTypes = {
   settings: PropTypes.shape({
     type: PropTypes.string.isRequired,
 
-    Province: PropTypes.string.isRequired,
-    City: PropTypes.string.isRequired,
-    AE_Status: PropTypes.string.isRequired,
-    Main_Type: PropTypes.string.isRequired,
+    nameOfEstablishments: PropTypes.string.isRequired,
+    room: PropTypes.string.isRequired,
+    
+    decription: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired,
 
-    cost: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+
     budget_allocated: PropTypes.string,
   }).isRequired,
 };
@@ -237,7 +239,7 @@ export default function Accommodations() {
   const [accommodations, setAccommodations] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchAccommodations = async () => {
@@ -252,7 +254,8 @@ export default function Accommodations() {
 
     fetchAccommodations();
   }, []);
-
+ 
+  // Pagination logic
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
@@ -261,14 +264,61 @@ export default function Accommodations() {
     setCurrentPage(pageNumber);
   };
 
+  const [location, setLocation] = useState('');  // Location filter state
+  const [paxPerRoom, setPaxPerRoom] = useState('');  // Pax per room filter state
+
+  // Fetch function that will be called when "Apply Filters" is clicked
+  const fetchFilteredAccommodations = async () => {
+    try {
+      // Convert paxPerRoom to a number
+      const paxPerRoomValue = paxPerRoom ? Number(paxPerRoom) : undefined;
+      
+      // Construct query parameters based on user-selected filters
+      const queryParams = new URLSearchParams({
+        ...(location && { location }), // Only add if location is set
+        ...(paxPerRoomValue && { paxPerRoom: paxPerRoomValue }), // Only add if paxPerRoom is set
+      }).toString();
+  
+      const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
+      const data = await response.json();
+      setAccommodations(data);
+      
+    } catch (error) {
+      console.error('Error fetching accommodations:', error);
+    }
+  };
+
   return (
     <>
       <section className="basis-1/3 w-full ~space-y-4/8">
         <Sort settings={settings} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <Filter FilterOptions={[0, 1]} />
-          <Plan />
+          <div>
+            <label className="flex flex-col space-y-1">
+              <span className="font-bold ~text-xs/base">Location</span>
+              <select onChange={(e) => setLocation(e.target.value)} className="w-full h-12 rounded-xl border-transparent bg-gray-100">
+                <option value="">Select a location</option>
+                <option value="la union">La Union</option>
+                <option value="un">Baguio</option>
+                <option value="cebu">Manila</option>
+                {/* Add other locations */}
+              </select>
+            </label>
+
+            <label className="flex flex-col space-y-1">
+              <span className="font-bold ~text-xs/base">No. of People per Room</span>
+              <input
+                type="number"
+                onChange={(e) => setPaxPerRoom(parseInt(e.target.value))}
+                value={paxPerRoom}
+                className="w-full h-12 rounded-xl border-transparent bg-gray-100"
+                placeholder="Enter pax per room"
+              />
+            </label>
+          </div>
         </div>
+        <button onClick={fetchFilteredAccommodations}>Search</button>
       </section>
 
       <section className="w-full ~space-y-4/8">
@@ -277,18 +327,20 @@ export default function Accommodations() {
           <View />
         </div>
 
-        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
-          {accommodations.map((settings, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {currentItems.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>
+        <Plan />
         <Pagination
-        totalItems={accommodations.length}
-        itemsPerPage={itemsPerPage}
-        currentPage={currentPage}
-        onPageChange={handlePageChange}
-      />
+          totalItems={accommodations.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </section>
+
       
     </>
   );
