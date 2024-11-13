@@ -11,6 +11,28 @@ import CardGrid from "../components/cards/card_grid";
 import Pagination from "../components/cards/pagination";
 import Modal from "../components/modals/modal";
 
+const provinceCityMap = {
+  "La Union": ["Agoo", 
+    "Aringay", 
+    "Bacnotan",
+    "Balaoan",
+    "Bangar",
+    "Bauang",
+    "Caba",
+    "Luna",
+    "Naguilian",
+    "Pugo",
+    "Rosario",
+    "San Fernando City",
+    "San Juan",
+    "Santo Tomas",
+    "Sudipen",
+    "Tubao"],
+    
+  "Ilocos Sur": ["", ""],
+  "Ilocos Norte": ["", ""],
+  "Pangasinan": ["", ""]
+};
 function SelectedAccommodation({ settings }) {
   const [isModal, setIsModal] = useState(false);
   const toggleModal = () => {
@@ -220,119 +242,127 @@ function Plan() {
   );
 }
 
-export default function Accommodations() {
+function Accommodations() {
   const settings = [
-    {
-      value: "sort_1",
-      text: "Sort 1",
-    },
-    {
-      value: "sort_2",
-      text: "Sort 2",
-    },
-    {
-      value: "sort_3",
-      text: "Sort 3",
-    },
+    { value: "sort_1", text: "Sort 1" },
+    { value: "sort_2", text: "Sort 2" },
+    { value: "sort_3", text: "Sort 3" },
   ];
-  const { province } = useStorePlan((state) => state);
-  const [accommodations, setAccommodations] = useState([]);
+  
+  const [province, setProvince] = useState('');
+  const [cities, setCities] = useState([]);
 
+  const [accommodations, setAccommodations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+  
+  const [city, setCity] = useState('');  
+  const [pax, setPax] = useState('');  
 
   useEffect(() => {
-    const fetchAccommodations = async () => {
-      try {
-        const response = await fetch('http://localhost:8080/accommodation');
-        const data = await response.json();
-        setAccommodations(data);
-      } catch (error) {
-        console.error('Error fetching accommodations:', error);
-      }
-    };
+    setCities(provinceCityMap[province] || []);
+    setCity(''); 
+  }, [province]);
 
-    fetchAccommodations();
-  }, []);
- 
-  // Pagination logic
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
-
-  const handlePageChange = (pageNumber) => {
-    setCurrentPage(pageNumber);
-  };
-
-  const [location, setLocation] = useState('');  // Location filter state
-  const [paxPerRoom, setPaxPerRoom] = useState('');  // Pax per room filter state
-
-  // Fetch function that will be called when "Apply Filters" is clicked
   const fetchFilteredAccommodations = async () => {
     try {
-      // Convert paxPerRoom to a number
-      const paxPerRoomValue = paxPerRoom ? Number(paxPerRoom) : undefined;
-      
-      // Construct query parameters based on user-selected filters
       const queryParams = new URLSearchParams({
-        ...(location && { location }), // Only add if location is set
-        ...(paxPerRoomValue && { paxPerRoom: paxPerRoomValue }), // Only add if paxPerRoom is set
+        ...(province && { province }),
+        ...(city && { city }),
+        ...(pax && { pax: Number(pax) }) 
       }).toString();
-  
+
       const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
       const data = await response.json();
       setAccommodations(data);
-      
     } catch (error) {
       console.error('Error fetching accommodations:', error);
     }
   };
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <>
       <section className="basis-1/3 w-full ~space-y-4/8">
-        <Sort settings={settings} />
+        <Sort settings={[{ value: "sort_1", text: "Sort 1" }]} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <Filter FilterOptions={[0, 1]} />
-          <div>
-            <label className="flex flex-col space-y-1">
-              <span className="font-bold ~text-xs/base">Location</span>
-              <select onChange={(e) => setLocation(e.target.value)} className="w-full h-12 rounded-xl border-transparent bg-gray-100">
-                <option value="">Select a location</option>
-                <option value="la union">La Union</option>
-                <option value="un">Baguio</option>
-                <option value="cebu">Manila</option>
-                {/* Add other locations */}
-              </select>
-            </label>
+          <Plan />
+         
+          <label className="flex flex-col space-y-1">
+            <span className="font-bold ~text-xs/base">Province</span>
+            <select
+              value={province}
+              onChange={(e) => setProvince(e.target.value)}
+              className="w-full h-12 rounded-xl border-transparent bg-gray-100"
+            >
+              <option value="">Select a province</option>
+              {Object.keys(provinceCityMap).map((prov) => (
+                <option key={prov} value={prov}>
+                  {prov}
+                </option>
+              ))}
+            </select>
+          </label>
 
-            <label className="flex flex-col space-y-1">
-              <span className="font-bold ~text-xs/base">No. of People per Room</span>
-              <input
-                type="number"
-                onChange={(e) => setPaxPerRoom(parseInt(e.target.value))}
-                value={paxPerRoom}
-                className="w-full h-12 rounded-xl border-transparent bg-gray-100"
-                placeholder="Enter pax per room"
-              />
-            </label>
-          </div>
+          
+          <label className="flex flex-col space-y-1">
+            <span className="font-bold ~text-xs/base">City</span>
+            <select
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="w-full h-12 rounded-xl border-transparent bg-gray-100"
+              disabled={!province} 
+            >
+              <option value="">Select a city</option>
+              {cities.map((cityName) => (
+                <option key={cityName} value={cityName}>
+                  {cityName}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          
+          <label className="flex flex-col space-y-1">
+            <span className="font-bold ~text-xs/base">No. of People per Room</span>
+            <input
+              type="number"
+              value={pax}
+              onChange={(e) => setPax(e.target.value)}
+              className="w-full h-12 rounded-xl border-transparent bg-gray-100"
+              placeholder="Enter pax per room"
+            />
+          </label>
+
+          <button onClick={fetchFilteredAccommodations} className="mt-4 rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase font-bold text-white py-2">
+            Search
+          </button>
         </div>
-        <button onClick={fetchFilteredAccommodations}>Search</button>
       </section>
 
       <section className="w-full ~space-y-4/8">
         <div className="h-fit lg:h-16 flex flex-row items-center">
-          <p className="w-full font-bold ~text-2xl/4xl text-sky-500">{province}</p>
+          <p className="w-full font-bold ~text-2xl/4xl text-sky-500">{}</p>
           <View />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {currentItems.map((settings, index) => (
-            <CardGrid key={index} settings={settings} />
-          ))}
+          {currentItems.length > 0 ? (
+            currentItems.map((settings, index) => (
+              <CardGrid key={index} settings={settings} />
+            ))
+          ) : (
+            <p>No accommodations found. Please adjust the filters and try again.</p>
+          )}
         </div>
-        <Plan />
         <Pagination
           totalItems={accommodations.length}
           itemsPerPage={itemsPerPage}
@@ -340,8 +370,8 @@ export default function Accommodations() {
           onPageChange={handlePageChange}
         />
       </section>
-
-      
     </>
   );
 }
+
+export default Accommodations;
