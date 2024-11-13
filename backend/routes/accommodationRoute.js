@@ -30,19 +30,37 @@ router.post('/', async (request, response) => {
 });
 
 
+// router.get('/', async (request, response) => {
+//   try {
+//     const acco = await Accommodationinformation.find({});
+
+//     return response.status(200).json(acco);
+//   } catch (error) {
+//     console.log(error.message);
+//     response.status(500).send({ message: error.message });
+//   }
+// });
+
 router.get('/', async (request, response) => {
   try {
-    const acco = await Accommodationinformation.find({});
+    // Extract location and paxPerRoom from query parameters
+    const { location, paxPerRoom } = request.query;
+    
+    // Build a filter object
+    const filter = {};
+    if (location) filter.location = location;
+    if (paxPerRoom) filter.paxPerRoom = parseInt(paxPerRoom);
 
-    return response.status(200).json({
-      count: acco.length,
-      data: acco,
-    });
+    // Find accommodations based on filter criteria
+    const acco = await Accommodationinformation.find(filter);
+
+    return response.status(200).json(acco);
   } catch (error) {
     console.log(error.message);
     response.status(500).send({ message: error.message });
   }
 });
+
 
 
 router.get('/:id', async (request, response) => {

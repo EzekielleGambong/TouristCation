@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
 
@@ -8,6 +8,7 @@ import Sort from "../components/others/sort";
 import Filter from "../components/others/filter";
 import View from "../components/others/view";
 import CardGrid from "../components/cards/card_grid";
+import Pagination from "../components/cards/pagination";
 import Modal from "../components/modals/modal";
 
 function SelectedAccommodation({ settings }) {
@@ -19,8 +20,8 @@ function SelectedAccommodation({ settings }) {
   return (
     <>
       <div onClick={toggleModal} className="rounded-xl transition-all bg-white hover:bg-sky-500 hover:text-white p-3">
-        <p className="font-bold ~text-sm/lg">{settings.destination}</p>
-        <p className="font-normal ~text-xs/base">P{settings.cost} per night</p>
+        <p className="font-bold ~text-sm/lg">{settings.price}</p>
+        <p className="font-normal ~text-xs/base">P{settings.price} per night</p>
       </div>
 
       {isModal && <Modal isOpen={isModal} onClose={toggleModal} settings={settings} />}
@@ -28,17 +29,19 @@ function SelectedAccommodation({ settings }) {
   );
 }
 
+
 SelectedAccommodation.propTypes = {
   settings: PropTypes.shape({
     type: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
 
-    destination: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    nameOfEstablishments: PropTypes.string.isRequired,
+    room: PropTypes.string.isRequired,
+    
+    decription: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired,
 
-    cost: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+
     budget_allocated: PropTypes.string,
   }).isRequired,
 };
@@ -233,49 +236,57 @@ export default function Accommodations() {
     },
   ];
   const { province } = useStorePlan((state) => state);
+  const [accommodations, setAccommodations] = useState([]);
 
-  const cardSettings = [
-    {
-      type: "accommodation",
-      id: 1,
-      destination: "Accommodation 1",
-      address: "Address of Accommodation asd1",
-      contact: "Contact of Accommodation 1",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 2000,
-    },
-    {
-      type: "accommodation",
-      id: 2,
-      destination: "Accommodation 2",
-      address: "Address of Accommodation 2",
-      contact: "Contact of Accommodation 2",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 3000,
-    },
-    {
-      type: "accommodation",
-      id: 3,
-      destination: "Accommodation 3",
-      address: "Address of Accommodation 3",
-      contact: "Contact of Accommodation 3",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 4000,
-    },
-    {
-      type: "accommodation",
-      id: 1,
-      destination: "Accommodation 4",
-      address: "Address of Accommodation 4",
-      contact: "Contact of Accommodation 4",
-      description:
-        "Veniam ex non commodo ipsum tempor qui enim. Velit ex enim cillum ex ex. Nisi non nostrud in tempor aliqua consequat laborum exercitation enim ipsum. Velit quis aliquip proident sunt. Minim pariatur consectetur mollit consectetur.",
-      cost: 5000,
-    },
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
+  useEffect(() => {
+    const fetchAccommodations = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/accommodation');
+        const data = await response.json();
+        setAccommodations(data);
+      } catch (error) {
+        console.error('Error fetching accommodations:', error);
+      }
+    };
+
+    fetchAccommodations();
+  }, []);
+ 
+  // Pagination logic
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
+
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const [location, setLocation] = useState('');  // Location filter state
+  const [paxPerRoom, setPaxPerRoom] = useState('');  // Pax per room filter state
+
+  // Fetch function that will be called when "Apply Filters" is clicked
+  const fetchFilteredAccommodations = async () => {
+    try {
+      // Convert paxPerRoom to a number
+      const paxPerRoomValue = paxPerRoom ? Number(paxPerRoom) : undefined;
+      
+      // Construct query parameters based on user-selected filters
+      const queryParams = new URLSearchParams({
+        ...(location && { location }), // Only add if location is set
+        ...(paxPerRoomValue && { paxPerRoom: paxPerRoomValue }), // Only add if paxPerRoom is set
+      }).toString();
+  
+      const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
+      const data = await response.json();
+      setAccommodations(data);
+      
+    } catch (error) {
+      console.error('Error fetching accommodations:', error);
+    }
+  };
 
   return (
     <>
@@ -283,8 +294,31 @@ export default function Accommodations() {
         <Sort settings={settings} />
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <Filter FilterOptions={[0, 1]} />
-          <Plan />
+          <div>
+            <label className="flex flex-col space-y-1">
+              <span className="font-bold ~text-xs/base">Location</span>
+              <select onChange={(e) => setLocation(e.target.value)} className="w-full h-12 rounded-xl border-transparent bg-gray-100">
+                <option value="">Select a location</option>
+                <option value="la union">La Union</option>
+                <option value="un">Baguio</option>
+                <option value="cebu">Manila</option>
+                {/* Add other locations */}
+              </select>
+            </label>
+
+            <label className="flex flex-col space-y-1">
+              <span className="font-bold ~text-xs/base">No. of People per Room</span>
+              <input
+                type="number"
+                onChange={(e) => setPaxPerRoom(parseInt(e.target.value))}
+                value={paxPerRoom}
+                className="w-full h-12 rounded-xl border-transparent bg-gray-100"
+                placeholder="Enter pax per room"
+              />
+            </label>
+          </div>
         </div>
+        <button onClick={fetchFilteredAccommodations}>Search</button>
       </section>
 
       <section className="w-full ~space-y-4/8">
@@ -293,12 +327,21 @@ export default function Accommodations() {
           <View />
         </div>
 
-        <div className="flex flex-col sm:grid sm:grid-cols-2 gap-4">
-          {cardSettings.map((settings, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {currentItems.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>
+        <Plan />
+        <Pagination
+          totalItems={accommodations.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </section>
+
+      
     </>
   );
 }

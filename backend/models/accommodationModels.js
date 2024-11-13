@@ -2,67 +2,91 @@ import mongoose from 'mongoose';
 
 const accoSchema = mongoose.Schema(
   {
-    Name_of_Establishments: {
+    establishmentId: {
       type: String,
       required: true,
     },
-    Province: {
+    nameOfEstablishment: {
       type: String,
       required: true,
     },
-    City: {
+    province: {
       type: String,
       required: true,
     },
-    AE_Status: {
+    city: {
       type: String,
       required: true,
     },
-    AE: {
+    address: {
+      type: String,
+      required: false,
+    },
+    aeStatus: {
+      type: String,
+      required: false,
+    },
+    aeType: {
+      type: String,
+      required: false,
+    },
+    mainType: {
+      type: String,
+      required: false,
+    },
+    subCategory: {
+      type: String,
+      required: false,
+    },
+    contactNumber: {
+      type: String,
+      required: false,
+    },
+    emailAddress: {
+      type: String,
+      required: false,
+    },
+    facebookPage: {
+      type: String,
+      required: false, 
+    },
+    room: {
       type: String,
       required: true,
     },
-    Main_Type: {
-      type: String,
-      required: true,
-    },
-    Sub_Category: {
-      type: String,
-      required: true,
-    },
-    existing_rooms: {
+    pax: {
       type: Number,
       required: true,
     },
-    Male_Employee_Regular: {
+    price: {
       type: Number,
-      required: true,
+      required: false,
     },
-    Female_Employee_Regular: {
-      type: Number,
-      required: true,
+    booking: {
+      type: String,
+      required: false,
     },
-    Male_Employee_Seasonal: {
-      type: Number,
-      required: true,
+    agoda: {
+      type: String,
+      required: false,
     },
-    Female_Employee_Seasonal: {
-      type: Number,
-      required: true,
+    googleTravel: {
+      type: String,
+      required: false,
     },
-    Telephone: {
+    coordinates: {
       type: String,
       required: true,
     },
-    Email_Address: {
+    description: {
       type: String,
       required: true,
     },
-    DOT: {
+    link: {
       type: String,
       required: true,
     },
-    Net: {
+    type: {
       type: String,
       required: true,
     }
