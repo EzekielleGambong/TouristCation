@@ -6,7 +6,6 @@ export const useStorePlan = create((set, get) => ({
   stayPeriodFrom: "",
   stayPeriodTo: "",
   noOfTravellers: 1,
-  noOfRooms: 1,
   wholeBudget: "",
   accommodationBudget: "",
   touristSpotsBudget: "",
@@ -20,10 +19,6 @@ export const useStorePlan = create((set, get) => ({
   setNoOfTravellers: (noOfTravellers) =>
     set((state) => ({
       noOfTravellers: typeof noOfTravellers === "function" ? noOfTravellers(state.noOfTravellers) : noOfTravellers,
-    })),
-  setNoOfRooms: (noOfRooms) =>
-    set((state) => ({
-      noOfRooms: typeof noOfRooms === "function" ? noOfRooms(state.noOfRooms) : noOfRooms,
     })),
   setWholeBudget: (wholeBudget) => set(() => ({ wholeBudget: wholeBudget })),
   setAccommodationBudget: (accommodationBudget) => set(() => ({ accommodationBudget: accommodationBudget })),

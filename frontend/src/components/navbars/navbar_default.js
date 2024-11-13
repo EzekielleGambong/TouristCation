@@ -44,7 +44,7 @@ export default function NavbarDefault() {
   ];
 
   return (
-    <nav className="absolute top-0 w-full bg-gray-100 z-50">
+    <nav className="absolute top-0 w-full bg-gray-100">
       <div className="2xl:container 2xl:mx-auto py-2 px-2 xl:px-12">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 left-0 flex items-center xl:hidden">

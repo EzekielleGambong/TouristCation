@@ -1,6 +1,6 @@
 export default function NavbarPlan() {
   return (
-    <nav className="absolute top-0 w-full bg-gray-100 z-50">
+    <nav className="absolute top-0 w-full bg-gray-100">
       <div className="sm:container sm:mx-auto py-2 px-2 sm:px-12">
         <div className="relative flex h-16 items-center justify-between">
           <div className="absolute inset-y-0 right-0 flex items-center sm:hidden">

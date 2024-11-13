@@ -1,17 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { useStorePlan } from "../hooks/useStore";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { setProvince } = useStorePlan((state) => state);
 
   const handlePlan = () => {
-    setProvince("La Union");
     navigate("/accommodations/");
   };
-
-  
 
   return (
     <>
@@ -24,13 +19,13 @@ export default function Home() {
             <p className="font-bold text-4xl md:~text-6xl/9xl text-center text-white">Header text</p>
             <p className="font-normal ~text-sm/lg text-center text-white">Sub Text</p>
 
-            <label className="flex items-center ~w-48/96 rounded-xl ~mt-6/8 ~py-1/2 ~px-4/6 ~text-xs/base bg-gray-100">
+            {/* <label className="flex items-center ~w-48/96 rounded-xl ~mt-6/8 ~py-1/2 ~px-4/6 ~text-xs/base bg-gray-100">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="~w-[0.875rem]/[1.125rem] fill-black">
                 <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
               </svg>
 
               <input type="text" className="w-full bg-gray-100 border-transparent focus:border-transparent focus:ring-0 ~text-sm/lg" placeholder="Select a Province" />
-            </label>
+            </label> */}
           </div>
 
           {/* BOTTOM RIGHT */}

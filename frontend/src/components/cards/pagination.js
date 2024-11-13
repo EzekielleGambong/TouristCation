@@ -29,33 +29,21 @@ function Pagination({ totalItems, itemsPerPage, currentPage, onPageChange }) {
   };
 
   return (
-    <div className="flex space-x-2 items-center">
+    <div className="flex flex-row space-x-2 justify-end">
       {/* Left Arrow */}
-      <button
-        className="p-2 bg-gray-300 rounded"
-        onClick={() => onPageChange(Math.max(1, currentPage - 1))}
-        disabled={currentPage === 1}
-      >
+      <button className="px-4 py-2 bg-gray-300 rounded-xl" onClick={() => onPageChange(Math.max(1, currentPage - 1))} disabled={currentPage === 1}>
         {"<"}
       </button>
 
       {/* Page Numbers */}
       {getPageNumbers().map((page) => (
-        <button
-          key={page}
-          className={`p-2 ${currentPage === page ? "bg-green-500 text-white" : "bg-yellow-300"}`}
-          onClick={() => onPageChange(page)}
-        >
+        <button key={page} className={`px-4 py-2 rounded-xl ${currentPage === page ? "bg-sky-500 text-white" : "bg-white"}`} onClick={() => onPageChange(page)}>
           {page}
         </button>
       ))}
 
       {/* Right Arrow */}
-      <button
-        className="p-2 bg-gray-300 rounded"
-        onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
-        disabled={currentPage === totalPages}
-      >
+      <button className="px-4 py-2 bg-gray-300 rounded-xl" onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))} disabled={currentPage === totalPages}>
         {">"}
       </button>
     </div>

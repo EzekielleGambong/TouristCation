@@ -7,14 +7,26 @@ import Modal from "../modals/modal";
 
 function Accommodation({ settings, isModal, toggleModal }) {
   return (
-    <div className="flex-grow w-full max-w-[48%] flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200">
+    <div className="flex-grow w-full flex flex-col rounded-xl overflow-hidden shadow-md border border-gray-200">
       <LazyLoadImage src={settings.link} alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
 
       <div className="bg-white p-3 space-y-2">
-        <div className="space-y-3">
-          <p className="font-bold ~text-sm/lg"> {`${settings.nameOfEstablishments}: ${settings.room}`}</p>
-          <p className="~min-h-16/24 line-clamp-4 font-normal ~text-xs/base">{settings.description}</p>
+        <div className="flex flex-col">
+          <p className="line-clamp-1 font-bold ~text-sm/lg">{settings.nameOfEstablishments}</p>
+          <p className="line-clamp-1 font-bold ~text-xs/base">
+            Address: <span className="font-normal">{settings.address}</span>
+          </p>
+          <p className="line-clamp-1 font-bold ~text-xs/base">
+            Room: <span className="font-normal">{settings.room}</span>
+          </p>
+          <p className="line-clamp-1 font-bold ~text-xs/base">
+            Maximum Occupancy: <span className="font-normal">{settings.pax}</span>
+          </p>
+          <p className="line-clamp-1 font-bold ~text-xs/base">
+            Contact: <span className="font-normal">{settings.contactNumber}</span>
+          </p>
         </div>
+        <p className="line-clamp-1 font-normal ~text-xs/base">{settings.description}</p>
 
         <p className="text-center font-medium ~text-lg/2xl">P{settings.price} per night</p>
         <button type="button" onClick={toggleModal} className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
@@ -26,6 +38,30 @@ function Accommodation({ settings, isModal, toggleModal }) {
     </div>
   );
 }
+
+Accommodation.propTypes = {
+  settings: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    establishmentId: PropTypes.string,
+    nameOfEstablishments: PropTypes.string.isRequired,
+    province: PropTypes.string.isRequired,
+    city: PropTypes.string.isRequired,
+    address: PropTypes.string.isRequired,
+    aeStatus: PropTypes.string,
+    aeType: PropTypes.string,
+    subCategory: PropTypes.string,
+    contactNumber: PropTypes.string.isRequired,
+    facebookPage: PropTypes.string,
+    room: PropTypes.string.isRequired,
+    pax: PropTypes.number.isRequired,
+    price: PropTypes.number.isRequired,
+    googleTravel: PropTypes.string,
+    coordinates: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
+    link: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 function TouristSpot({ settings, isModal, toggleModal }) {
   return (
@@ -100,20 +136,3 @@ export default function CardGrid({ settings }) {
 
   return <Card settings={settings} isModal={isModal} toggleModal={toggleModal} />;
 }
-
-CardGrid.propTypes = {
-  settings: PropTypes.shape({
-    type: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
-
-    destination: PropTypes.string.isRequired,
-    address: PropTypes.string.isRequired,
-    contact: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-
-    cost: PropTypes.number.isRequired,
-    budget_allocated: PropTypes.number,
-
-    rating: PropTypes.number,
-  }).isRequired,
-};
