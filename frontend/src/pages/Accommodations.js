@@ -256,12 +256,12 @@ function Accommodations() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
   
-  const [city, setCity] = useState('');  // Location filter state
-  const [pax, setPax] = useState('');  // Pax per room filter state
+  const [city, setCity] = useState('');  
+  const [pax, setPax] = useState('');  
 
   useEffect(() => {
     setCities(provinceCityMap[province] || []);
-    setCity(''); // Reset city when province changes
+    setCity(''); 
   }, [province]);
 
   const fetchFilteredAccommodations = async () => {
@@ -269,7 +269,7 @@ function Accommodations() {
       const queryParams = new URLSearchParams({
         ...(province && { province }),
         ...(city && { city }),
-        ...(pax && { pax: Number(pax) }) // Add pax filter to query
+        ...(pax && { pax: Number(pax) }) 
       }).toString();
 
       const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
@@ -295,7 +295,7 @@ function Accommodations() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <Filter FilterOptions={[0, 1]} />
           <Plan />
-          {/* Province Dropdown */}
+         
           <label className="flex flex-col space-y-1">
             <span className="font-bold ~text-xs/base">Province</span>
             <select
@@ -312,14 +312,14 @@ function Accommodations() {
             </select>
           </label>
 
-          {/* City Dropdown */}
+          
           <label className="flex flex-col space-y-1">
             <span className="font-bold ~text-xs/base">City</span>
             <select
               value={city}
               onChange={(e) => setCity(e.target.value)}
               className="w-full h-12 rounded-xl border-transparent bg-gray-100"
-              disabled={!province} // Disable if no province selected
+              disabled={!province} 
             >
               <option value="">Select a city</option>
               {cities.map((cityName) => (
@@ -330,7 +330,7 @@ function Accommodations() {
             </select>
           </label>
 
-          {/* Pax Input */}
+          
           <label className="flex flex-col space-y-1">
             <span className="font-bold ~text-xs/base">No. of People per Room</span>
             <input
