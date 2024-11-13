@@ -44,12 +44,12 @@ router.post('/', async (request, response) => {
 router.get('/', async (request, response) => {
   try {
     // Extract location and paxPerRoom from query parameters
-    const { location, paxPerRoom } = request.query;
+    const { pax, city } = request.query;
     
     // Build a filter object
     const filter = {};
-    if (location) filter.location = location;
-    if (paxPerRoom) filter.paxPerRoom = parseInt(paxPerRoom);
+    if (city) filter.city = city;
+    if (pax) filter.pax = parseInt(pax);
 
     // Find accommodations based on filter criteria
     const acco = await Accommodationinformation.find(filter);
