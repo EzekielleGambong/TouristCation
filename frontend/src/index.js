@@ -30,6 +30,7 @@ export default function TouristCation() {
 
         <Route path="/" element={<LayoutTitle />}>
           <Route path="/accommodations/" element={<Accommodations />} />
+          <Route path="/itinerary-review/" element={<ItineraryReview />} />
         </Route>
 
         <Route path="/accommodations/" element={<LayoutTitle />}>

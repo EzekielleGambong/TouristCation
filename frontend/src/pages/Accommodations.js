@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
+import touristSpots from "./file.json";
 
 import PropTypes from "prop-types";
 
@@ -87,6 +88,7 @@ function Plan() {
     setStayPeriodTo,
     setNoOfTravellers,
     setWholeBudget,
+    setBudgetCap,
     setAccommodationBudget,
     setTouristSpotsBudget,
     accommodation,
@@ -94,6 +96,8 @@ function Plan() {
     stayPeriodTo,
     noOfTravellers,
     wholeBudget,
+    budgetCap,
+    touristSpotsBudget,
   } = useStorePlan((state) => state);
 
   const addOneDay = (date) => {
@@ -105,25 +109,28 @@ function Plan() {
 
   const handleSetAccommodation = (e) => {
     e.preventDefault();
-    // if (accommodation === "") {
-    //   alert("Please select an accommodation");
-    //   return;
-    // } else if (noOfTravellers === 0) {
-    //   alert("No. of Travellers can't be 0");
-    //   return;
-    // }
 
-    // const daysOfTour = getDaysOfTour(stayPeriodFrom, stayPeriodTo);
-    // const accommodationBudget = accommodation.cost * daysOfTour;
+    if (accommodation === "") {
+      alert("Please select an accommodation");
+      return;
+    } else if (noOfTravellers === 0) {
+      alert("No. of Travellers can't be 0");
+      return;
+    }
 
-    // if (accommodationBudget > wholeBudget) {
-    //   alert("Budget is too low!");
-    //   return;
-    // }
+    const daysOfTour = getDaysOfTour(stayPeriodFrom, stayPeriodTo);
+    const noOfRooms = Math.ceil(noOfTravellers / accommodation.pax);
+    const accommodationBudget = accommodation.price * daysOfTour * noOfRooms;
 
-    // setAccommodationBudget(accommodationBudget);
-    // setTouristSpotsBudget(wholeBudget - accommodationBudget);
-    // navigate("/accommodations/tourist-spots/");
+    if (accommodationBudget > wholeBudget) {
+      alert("Budget is too low!");
+      return;
+    }
+
+    setAccommodationBudget(accommodationBudget);
+    setTouristSpotsBudget(wholeBudget - accommodationBudget);
+    toggleModal();
+    // navigate("/itinerary-review/");
   };
 
   return (
@@ -186,11 +193,27 @@ function Plan() {
         />
       </label>
 
-      <button type="button" onClick={toggleModal} className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
+      <label className="flex flex-col space-y-1">
+        <span className="font-bold ~text-xs/base">Budget Cap for Tourist Spot</span>
+        <input
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          onInput={(e) => {
+            e.target.value = e.target.value.replace(/\D/g, "");
+          }}
+          onChange={(e) => setBudgetCap(e.target.value)}
+          className="w-full h-12 rounded-xl border-transparent bg-gray-100 focus:border-sky-500 focus:ring-0 font-normal ~text-xs/base"
+          placeholder="Set your budget cap..."
+          required
+        />
+      </label>
+
+      <button type="submit" className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
         Set Accommodation
       </button>
 
-      {isModal && <ModalPlan isOpen={isModal} onClose={toggleModal} />}
+      {isModal && <ModalPlan isOpen={isModal} onClose={toggleModal} touristSpotsBudget={touristSpotsBudget} budgetCap={budgetCap} accommodation={accommodation} touristSpots={touristSpots} />}
     </form>
   );
 }
@@ -336,7 +359,7 @@ function Accommodations() {
           {currentItems.length > 0 ? currentItems.map((settings) => <CardGrid key={settings._id} settings={settings} />) : <p>No accommodations found. Please adjust the filters and try again.</p>}
         </div>
 
-        <Pagination totalItems={accommodations.length} itemsPerPage={itemsPerPage} currentPage={currentPage} onPageChange={handlePageChange} />
+        {accommodations.length !== 0 && <Pagination totalItems={accommodations.length} itemsPerPage={itemsPerPage} currentPage={currentPage} onPageChange={handlePageChange} />}
       </section>
     </>
   );
