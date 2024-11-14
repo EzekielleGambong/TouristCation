@@ -229,7 +229,7 @@ function Accommodations() {
     "La Union": ["Agoo", "Aringay", "Bacnotan", "Balaoan", "Bangar", "Bauang", "Caba", "Luna", "Naguilian", "Pugo", "Rosario", "San Fernando City", "San Juan", "Santo Tomas", "Sudipen", "Tubao"],
     "Ilocos Sur": ["", ""],
     "Ilocos Norte": ["", ""],
-    Pangasinan: ["", ""],
+    "Pangasinan": ["", ""],
   };
   const [province, setProvince] = useState("");
   const [cities, setCities] = useState([]);
