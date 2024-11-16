@@ -18,41 +18,37 @@ export function Knapsack(touristSpotsBudget, budgetCap, accommodation, touristTy
   let remainingBudget = touristSpotsBudget;
 
   for (const type of touristTypes) {
-    if (type.rating > 0) {
-      const spotBudget = (budgetCap / 5) * type.rating;
+    if (type.rating > 0 && type.count > 0) {
+      const maxBudgetPerSpot = (budgetCap / 5) * type.rating;
 
-      // Get spots of this type, with distance and cost calculated
       const spots = touristSpots
         .filter((spot) => spot.typeOfAttraction === type.type)
         .map((spot) => ({
           ...spot,
           distance: calculateDistance(accommodation.coordinates, spot.location),
-          totalCost: spotBudget + spot.entranceFee + spot.additionalFee,
+          totalCost: spot.entranceFee + spot.additionalFee + maxBudgetPerSpot, // Calculate full cost
         }))
-        .sort((a, b) => a.distance - b.distance); // Sort by distance
+        .sort((a, b) => a.distance - b.distance); // Prioritize closest spots
 
-      // DP Knapsack to maximize rating within budget constraints
-      const dp = Array(spots.length + 1)
-        .fill(0)
-        .map(() => Array(remainingBudget + 1).fill(0));
+      let spotsSelected = 0;
 
-      spots.forEach((spot, i) => {
-        const spotCost = spot.totalCost;
-        const ratingValue = type.rating;
+      for (const spot of spots) {
+        if (
+          spotsSelected < type.count && // Respect count limit
+          remainingBudget >= spot.totalCost // Stay within remaining budget
+        ) {
+          remainingBudget -= spot.totalCost;
 
-        for (let k = remainingBudget; k >= spotCost; k--) {
-          if (dp[i + 1][k] < dp[i][k - spotCost] + ratingValue) {
-            dp[i + 1][k] = dp[i][k - spotCost] + ratingValue;
-            selectedSpots.push({
-              name: spot.nameOfAttraction,
-              type: spot.typeOfAttraction,
-              distance: spot.distance.toFixed(2),
-              cost: spotCost,
-            });
-            remainingBudget -= spotCost;
-          }
+          selectedSpots.push({
+            type: "itinerary_tourist_spot",
+            distance: Math.round(spot.distance.toFixed(2) * 100) / 100,
+            ...spot,
+            totalBudget: spot.totalCost.toFixed(2),
+          });
+
+          spotsSelected++;
         }
-      });
+      }
     }
   }
 

@@ -1,17 +1,15 @@
 import { useStorePlan } from "../hooks/useStore";
-import { Knapsack } from "../hooks/useKnapsack";
 
-import React, { useCallback, useMemo, useState } from 'react';
-import { GoogleMap,MarkerF, useJsApiLoader } from '@react-google-maps/api';
+import React, { useCallback, useMemo, useState } from "react";
+import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 
 import PropTypes from "prop-types";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 
 import CardGrid from "../components/cards/card_grid";
 
 const containerStyle = {
-  width: '100%',
-  height: '400px',
+  width: "100%",
+  height: "400px",
 };
 
 const center = {
@@ -22,22 +20,21 @@ const zoom = 12;
 const points = [
   {
     lat: 16.30637,
-    lng: 120.37398
+    lng: 120.37398,
   },
   {
     lat: 16.35344,
-    lng: 120.34065
+    lng: 120.34065,
   },
   {
     lat: 16.32242,
-    lng: 120.36701
+    lng: 120.36701,
   },
   {
     lat: 16.32319,
-    lng: 120.36665
-  }
-]
-
+    lng: 120.36665,
+  },
+];
 
 function formatDate(data) {
   return new Date(data).toLocaleDateString("en-US", {
@@ -70,8 +67,7 @@ AccommodationInformation.propTypes = {
 };
 
 export default function ItineraryReview() {
-  const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, noOfRooms, touristSpotsBudget, touristSpots, budgetCap } = useStorePlan((state) => state);
-  const cardSettings = Knapsack(touristSpots, touristSpotsBudget, budgetCap);
+  const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots } = useStorePlan((state) => state);
 
   const accommodationInfo = [
     {
@@ -99,29 +95,24 @@ export default function ItineraryReview() {
       data: noOfTravellers,
     },
     {
-      type: "number",
-      icon: (
-        <path d="M80-200v-240q0-27 11-49t29-39v-112q0-50 35-85t85-35h160q23 0 43 8.5t37 23.5q17-15 37-23.5t43-8.5h160q50 0 85 35t35 85v112q18 17 29 39t11 49v240h-80v-80H160v80H80Zm440-360h240v-80q0-17-11.5-28.5T720-680H560q-17 0-28.5 11.5T520-640v80Zm-320 0h240v-80q0-17-11.5-28.5T400-680H240q-17 0-28.5 11.5T200-640v80Z" />
-      ),
-      title: "Rooms",
-      data: noOfRooms,
-    },
-    {
       type: "money",
       icon: (
         <path d="M441-120v-86q-53-12-91.5-46T293-348l74-30q15 48 44.5 73t77.5 25q41 0 69.5-18.5T587-356q0-35-22-55.5T463-458q-86-27-118-64.5T313-614q0-65 42-101t86-41v-84h80v84q50 8 82.5 36.5T651-650l-74 32q-12-32-34-48t-60-16q-44 0-67 19.5T393-614q0 33 30 52t104 40q69 20 104.5 63.5T667-358q0 71-42 108t-104 46v84h-80Z" />
       ),
       title: "Excess Budget",
-      data: cardSettings.excessBudget,
+      data: excessBudget,
     },
   ];
-  const options = useMemo(() => ({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyALxxaseN-mHW6PereNm-dNZl2pxAvnLfw', 
-    libraries: ['maps'],
-    language: 'en',
-    region: '',
-  }), []);
+  const options = useMemo(
+    () => ({
+      id: "google-map-script",
+      googleMapsApiKey: "AIzaSyALxxaseN-mHW6PereNm-dNZl2pxAvnLfw",
+      libraries: ["maps"],
+      language: "en",
+      region: "",
+    }),
+    []
+  );
 
   const { isLoaded, loadError } = useJsApiLoader(options);
 
@@ -142,13 +133,7 @@ export default function ItineraryReview() {
     <div className="w-full flex flex-col ~space-y-6/8">
       <section className="map-section">
         {isLoaded ? (
-          <GoogleMap
-            mapContainerStyle={containerStyle}
-            center={center}
-            zoom={zoom}
-            onLoad={onLoad}
-            onUnmount={onUnmount}
-          >
+          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={zoom} onLoad={onLoad} onUnmount={onUnmount}>
             {points.map((point, i) => (
               <MarkerF key={i} position={point} />
             ))}
@@ -166,7 +151,7 @@ export default function ItineraryReview() {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="w-10 fill-black">
               <path d="M120-120v-560h160v-160h400v320h160v400H520v-160h-80v160H120Zm80-80h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 320h80v-80h-80v80Zm0-160h80v-80h-80v80Zm0-160h80v-80h-80v80Zm160 480h80v-80h-80v80Zm0-160h80v-80h-80v80Z" />
             </svg>
-            <p className="font-bold ~text-xl/3xl">{accommodation.destination}</p>
+            <p className="font-bold ~text-xl/3xl">{accommodation.nameOfEstablishments}</p>
           </div>
           <p className="font-normal ~text-base/xl">{accommodation.address}</p>
         </div>
@@ -192,7 +177,7 @@ export default function ItineraryReview() {
         </div>
 
         <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {cardSettings.settings.map((settings, index) => (
+          {touristSpots[0].map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>

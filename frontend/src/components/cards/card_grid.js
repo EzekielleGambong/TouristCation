@@ -86,27 +86,35 @@ function TouristSpot({ settings, isModal, toggleModal }) {
 
 function IteneraryTouristSpot({ settings, isModal, toggleModal }) {
   return (
-    <div className="flex-grow max-w-[1/2] flex flex-col rounded-xl overflow-hidden">
+    <div className="flex-grow max-w-[1/2] flex flex-col rounded-xl overflow-hidden shadow">
       <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
 
       <div className="bg-white p-3 space-y-3">
         <div className="space-y-2">
-          <p className="font-bold line-clamp-1 ~text-sm/lg">{settings.destination}</p>
-          <p className="~min-h-8/12 line-clamp-2 font-bold ~text-xs/base">
-            Address:
-            <span className="ml-1 font-normal">{settings.address}</span>
-          </p>
+          <p className="font-bold line-clamp-1 ~text-sm/lg">{settings.nameOfAttraction}</p>
+          <div className="flex flex-col">
+            <p className="font-bold ~text-xs/base">
+              Distance: <span className="font-normal">{settings.distance} km</span>
+            </p>
+            <p className="font-bold ~text-xs/base">
+              Type of Attraction: <span className="font-normal">{settings.typeOfAttraction}</span>
+            </p>
+            <p className="line-clamp-1 font-bold ~text-xs/base">
+              Address:
+              <span className="ml-1 font-normal">{settings.address}</span>
+            </p>
+          </div>
 
           <div className="flex flex-col">
             <p className="font-bold ~text-xs/base">
-              Cost: <span className="font-normal">P{settings.cost}</span>
+              Entrance Fee: <span className="font-normal">P{settings.entranceFee}</span>
             </p>
             <p className="font-bold ~text-xs/base">
-              Budget Allocated:
-              <span className="ml-1 font-normal">P{settings.budget_allocated}</span>
+              Addittional Fee:
+              <span className="ml-1 font-normal">P{settings.additionalFee}</span>
             </p>
             <p className="font-bold ~text-xs/base">
-              Total Budget: <span className="font-normal">P{settings.total_budget}</span>
+              Total Budget: <span className="font-normal">P{settings.totalBudget}</span>
             </p>
           </div>
         </div>
@@ -120,6 +128,32 @@ function IteneraryTouristSpot({ settings, isModal, toggleModal }) {
     </div>
   );
 }
+
+IteneraryTouristSpot.propTypes = {
+  settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    LGU: PropTypes.string.isRequired,
+    nameOfAttraction: PropTypes.string.isRequired,
+    natureOfAttraction: PropTypes.string,
+    classification: PropTypes.string.isRequired,
+    operatingHours: PropTypes.string,
+    typeOfAttraction: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    dataConnectivity: PropTypes.string,
+    securityHazards: PropTypes.string,
+    nationalDeclarations: PropTypes.string,
+    address: PropTypes.string.isRequired,
+    roadCondition: PropTypes.string,
+    owner: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+    telephone: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    briefDescription: PropTypes.string.isRequired,
+    entranceFee: PropTypes.number.isRequired,
+    additionalFee: PropTypes.number.isRequired,
+    totalBudget: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default function CardGrid({ settings }) {
   const [isModal, setIsModal] = useState(false);

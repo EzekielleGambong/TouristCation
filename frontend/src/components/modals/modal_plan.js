@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useStorePlan } from "../../hooks/useStore";
 import { Knapsack } from "../../hooks/useKnapsack_2";
+import { useNavigate } from "react-router-dom";
 
 export default function ModalPlan({ isOpen, onClose, touristSpotsBudget, budgetCap, accommodation, touristSpots }) {
+  const { setTouristSpots, setExcessBudget } = useStorePlan((state) => state);
+
   const [touristTypes, setTouristTypes] = useState([
-    { type: "Cultural Tourism", rating: 0, count: 3 },
+    { type: "Cultural Tourism", rating: 0, count: 1 },
     { type: "Industrial Tourism", rating: 0, count: 3 },
     { type: "MICE and Events Tourism", rating: 0, count: 3 },
     { type: "Nature Tourism", rating: 0, count: 3 },
@@ -12,6 +16,7 @@ export default function ModalPlan({ isOpen, onClose, touristSpotsBudget, budgetC
   ]);
 
   const [hover, setHover] = useState(Array(touristTypes.length).fill(0));
+  const navigate = useNavigate();
 
   const handleRating = (index, love) => {
     const updatedSpots = touristTypes.map((spot, i) => (i === index ? { ...spot, rating: love } : spot));
@@ -28,9 +33,17 @@ export default function ModalPlan({ isOpen, onClose, touristSpotsBudget, budgetC
   };
 
   const getKnapsack = () => {
+    const allRatingsZero = touristTypes.every((type) => type.rating === 0);
+    if (allRatingsZero) {
+      alert("Please set a rating for at least one type of tourist spot before proceeding.");
+      return; // Stop the function if all ratings are 0
+    }
+
     let result = Knapsack(touristSpotsBudget, budgetCap, accommodation, touristTypes, touristSpots);
 
-    console.log("Knapsack:", result);
+    setTouristSpots(result.settings);
+    setExcessBudget(result.excessBudget);
+    navigate("/itinerary-review/");
   };
 
   return (

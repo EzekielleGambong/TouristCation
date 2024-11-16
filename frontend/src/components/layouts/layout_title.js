@@ -19,6 +19,7 @@ export default function LayoutTitle() {
       case "/accommodations/tourist-spots/":
         setPage("Tourist Spots");
         break;
+      case "/itinerary-review/":
       case "/accommodations/tourist-spots/itinerary-review":
       case "/accommodations/tourist-spots/itinerary-review/":
         setPage("Itinerary Review");

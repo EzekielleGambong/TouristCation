@@ -182,9 +182,15 @@ function IteneraryTouristSpot({ settings, onClose }) {
                 </button>
               </div>
               <div className="flex flex-col space-y-2 p-6">
-                <p className="font-bold ~text-lg/2xl">{settings.destination}</p>
+                <p className="font-bold ~text-lg/2xl">{settings.nameOfAttraction}</p>
 
                 <div className="flex flex-col">
+                  <p className="font-bold ~text-xs/base">
+                    Distance: <span className="font-normal">{settings.distance} km</span>
+                  </p>
+                  <p className="font-bold ~text-xs/base">
+                    Type of Attraction: <span className="font-normal">{settings.typeOfAttraction}</span>
+                  </p>
                   <p className="font-bold ~text-xs/base">
                     Address: <span className="font-normal">{settings.address}</span>
                   </p>
@@ -193,17 +199,18 @@ function IteneraryTouristSpot({ settings, onClose }) {
                   </p>
                 </div>
 
-                <p className="font-normal ~text-xs/base">{settings.description}</p>
+                <p className="font-normal ~text-xs/base">{settings.briefDescription}</p>
 
                 <div className="flex flex-col">
                   <p className="font-bold ~text-xs/base">
-                    Cost: <span className="font-normal">P{settings.cost}</span>
+                    Entrance Fee: <span className="font-normal">P{settings.entranceFee}</span>
                   </p>
                   <p className="font-bold ~text-xs/base">
-                    Budget Allocated: <span className="font-normal">P{settings.budget_allocated}</span>
+                    Addittional Fee:
+                    <span className="ml-1 font-normal">P{settings.additionalFee}</span>
                   </p>
                   <p className="font-bold ~text-xs/base">
-                    Total Budget: <span className="font-normal">P{settings.total_budget}</span>
+                    Total Budget: <span className="font-normal">P{settings.totalBudget}</span>
                   </p>
                 </div>
               </div>
@@ -214,6 +221,32 @@ function IteneraryTouristSpot({ settings, onClose }) {
     </div>
   );
 }
+
+IteneraryTouristSpot.propTypes = {
+  settings: PropTypes.shape({
+    type: PropTypes.string.isRequired,
+    LGU: PropTypes.string.isRequired,
+    nameOfAttraction: PropTypes.string.isRequired,
+    natureOfAttraction: PropTypes.string,
+    classification: PropTypes.string.isRequired,
+    operatingHours: PropTypes.string,
+    typeOfAttraction: PropTypes.string.isRequired,
+    category: PropTypes.string.isRequired,
+    dataConnectivity: PropTypes.string,
+    securityHazards: PropTypes.string,
+    nationalDeclarations: PropTypes.string,
+    address: PropTypes.string.isRequired,
+    roadCondition: PropTypes.string,
+    owner: PropTypes.string.isRequired,
+    contact: PropTypes.string.isRequired,
+    telephone: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    briefDescription: PropTypes.string.isRequired,
+    entranceFee: PropTypes.number.isRequired,
+    additionalFee: PropTypes.number.isRequired,
+    totalBudget: PropTypes.number.isRequired,
+  }).isRequired,
+};
 
 export default function Modal({ isOpen, onClose, settings }) {
   if (!isOpen) return null; // If not open, return nothing

@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useStorePlan } from "../hooks/useStore";
 import touristSpots from "./file.json";
 
@@ -82,7 +81,6 @@ function Plan() {
     setIsModal(!isModal);
   };
 
-  const navigate = useNavigate();
   const {
     setStayPeriodFrom,
     setStayPeriodTo,
@@ -130,7 +128,6 @@ function Plan() {
     setAccommodationBudget(accommodationBudget);
     setTouristSpotsBudget(wholeBudget - accommodationBudget);
     toggleModal();
-    // navigate("/itinerary-review/");
   };
 
   return (
@@ -229,9 +226,9 @@ function Accommodations() {
     "La Union": ["Agoo", "Aringay", "Bacnotan", "Balaoan", "Bangar", "Bauang", "Caba", "Luna", "Naguilian", "Pugo", "Rosario", "San Fernando City", "San Juan", "Santo Tomas", "Sudipen", "Tubao"],
     "Ilocos Sur": ["", ""],
     "Ilocos Norte": ["", ""],
-    "Pangasinan": ["", ""],
+    Pangasinan: ["", ""],
   };
-  const [province, setProvince] = useState("");
+  const { setProvince, province } = useStorePlan((state) => state);
   const [cities, setCities] = useState([]);
 
   const [accommodations, setAccommodations] = useState([]);

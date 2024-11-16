@@ -9,6 +9,7 @@ export const useStorePlan = create((set, get) => ({
   wholeBudget: "",
   accommodationBudget: "",
   touristSpotsBudget: "",
+  excessBudget: "",
   touristSpots: [],
   budgetCap: "",
 
@@ -23,6 +24,7 @@ export const useStorePlan = create((set, get) => ({
   setWholeBudget: (wholeBudget) => set(() => ({ wholeBudget: wholeBudget })),
   setAccommodationBudget: (accommodationBudget) => set(() => ({ accommodationBudget: accommodationBudget })),
   setTouristSpotsBudget: (touristSpotsBudget) => set(() => ({ touristSpotsBudget: touristSpotsBudget })),
+  setExcessBudget: (excessBudget) => set(() => ({ excessBudget: excessBudget })),
   setTouristSpots: (newSpot) =>
     set((state) => {
       const existingIndex = state.touristSpots.findIndex((spot) => spot.id === newSpot.id);
