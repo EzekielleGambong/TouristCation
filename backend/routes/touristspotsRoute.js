@@ -14,6 +14,22 @@ router.get('/', async (request, response) => {
   }
 });
 
+// Route to get only coordinates and relevant info
+router.get('/coordinates', async (req, res) => {
+  try {
+    const locations = await Attractioninformation.find({}, {
+      nameOfAttractions: 1,
+      locationCoordinates: 1,
+    });
+
+    res.status(200).json(locations);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send({ message: 'Failed to fetch coordinates' });
+  }
+});
+
+
 
 
 export default router;

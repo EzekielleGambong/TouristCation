@@ -31,6 +31,9 @@ function SelectedAccommodation({ settings }) {
           <p className="line-clamp-1 font-bold ~text-xs/base">
             Contact: <span className="font-normal">{settings.contactNumber}</span>
           </p>
+          <p className="line-clamp-1 font-bold ~text-xs/base">
+            cords: <span className="font-normal">{settings.coordinates}</span>
+          </p>
         </div>
 
         <p className="font-normal ~text-xs/base">P{settings.price} per night</p>

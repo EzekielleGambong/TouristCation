@@ -11,6 +11,7 @@ import LayoutTitle from "./components/layouts/layout_title";
 
 // # ~ ~ ~ ~ ~ # PAGES # ~ ~ ~ ~ ~ # //
 import Home from "./pages/Home";
+import Sample from "./pages/sample";
 import Accommodations from "./pages/Accommodations";
 import TouristSpots from "./pages/TouristSpots";
 import ItineraryReview from "./pages/ItineraryReview";
@@ -23,7 +24,7 @@ export default function TouristCation() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LayoutDefault />}>
-          <Route index element={<Home />} />
+          <Route index element={< Sample/>} />
           <Route path="/terms_and_conditions" element={<TermsAndConditions />} />
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
         </Route>
