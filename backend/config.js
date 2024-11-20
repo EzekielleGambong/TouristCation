@@ -1,4 +1,5 @@
-export const PORT =8080;
+import dotenv from 'dotenv';
+dotenv.config();
 
-export const mongoDBURL =
-  'mongodb+srv://touristcation:grJ1xsikaHJ7VbpO@cluster0.coli3kx.mongodb.net/TouristCation?retryWrites=true&w=majority';
+export const PORT = process.env.PORT;
+export const mongoDBURL = process.env.MONGODB_URL;
