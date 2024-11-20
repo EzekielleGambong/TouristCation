@@ -3,7 +3,7 @@ import { useStorePlan } from "../hooks/useStore";
 import touristSpots from "./file.json";
 
 import PropTypes from "prop-types";
-
+import landingimg from '../images/6.png';
 import Sort from "../components/others/sort";
 import View from "../components/others/view";
 import CardGrid from "../components/cards/card_grid";
@@ -148,10 +148,11 @@ function Plan() {
             onChange={(e) => setStayPeriodFrom(e.target.value)}
             className="w-full h-12 start-date rounded-t-xl border-transparent focus:border-sky-500 focus:ring-0 bg-gray-100 font-normal ~text-xs/base"
             required
+            min={new Date().toISOString().split('T')[0]} // Set today as the minimum date
           />
           <input
             type="date"
-            min={stayPeriodFrom ? addOneDay(stayPeriodFrom) : ""}
+            min={stayPeriodFrom ? addOneDay(stayPeriodFrom) : ""} // Ensure Stay To is after Stay From
             onChange={(e) => setStayPeriodTo(e.target.value)}
             className="w-full h-12 end-date rounded-b-xl border-transparent focus:border-sky-500 focus:ring-0 bg-gray-100 font-normal ~text-xs/base"
             disabled={!stayPeriodFrom}
@@ -220,14 +221,14 @@ function Plan() {
 
 function Accommodations() {
   const settings = [
-    { value: "sort_1", text: "Sort 1" },
-    { value: "sort_2", text: "Sort 2" },
-    { value: "sort_3", text: "Sort 3" },
+    { value: "sort_1", text: "Sort Data" },
+    { value: "sort_low_to_high", text: "Price: Low to High" }, 
+    { value: "sort_high_to_low", text: "Price: High to Low" }, 
   ];
 
   const provinceCityMap = {
-    "La Union": ["Agoo", "Aringay", "Bacnotan", "Balaoan", "Bangar", "Bauang", "Caba", "Luna", "Naguilian", "Pugo", "Rosario", "San Fernando City", "San Juan", "Santo Tomas", "Sudipen", "Tubao"],
-    "Ilocos Sur": ["Bantay",
+    "La Union": ["All", "Agoo", "Aringay", "Bacnotan", "Balaoan", "Bangar", "Bauang", "Caba", "Luna", "Naguilian", "Pugo", "Rosario", "San Fernando City", "San Juan", "Santo Tomas", "Sudipen", "Tubao"],
+    "Ilocos Sur": ["All", "Bantay",
       "Cabugao",
       "Candon City",
       "Caoayan",
@@ -241,7 +242,7 @@ function Accommodations() {
       "Santo Domingo",
       "Tagudin",
       "Vigan City"],
-    "Ilocos Norte": ["Adams",
+    "Ilocos Norte": ["All", "Adams",
       "Badoc",
       "Bangui",
       "Batac City",
@@ -251,7 +252,7 @@ function Accommodations() {
       "Pasuquin",
       "San Nicolas",
       'Sarrat'],
-    "Pangasinan": ["Agno",
+    "Pangasinan": ["All", "Agno",
       "Alaminos City",
       "Alcala",
       "Anda",
@@ -282,7 +283,7 @@ function Accommodations() {
   const [accommodations, setAccommodations] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-
+  const [sortOption, setSortOption] = useState(""); // New state for sorting
   const [selectedCity, setSelectedCity] = useState("");
   const [city, setCity] = useState("");
   const [pax, setPax] = useState("");
@@ -308,9 +309,10 @@ function Accommodations() {
 
       const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
       const data = await response.json();
-
+      console.log("Fetched data:", queryParams);
       setSelectedCity(city === "" ? province : city);
       setAccommodations(data);
+      setSortOption("")
     } catch (error) {
       console.error("Error fetching accommodations:", error);
     }
@@ -319,7 +321,20 @@ function Accommodations() {
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
-
+  const handleSortChange = (option) => {
+    setSortOption(option);
+  };
+  useEffect(() => {
+    if (sortOption === "sort_low_to_high") {
+      setAccommodations((prevAccommodations) =>
+        [...prevAccommodations].sort((a, b) => a.price - b.price)
+      );
+    } else if (sortOption === "sort_high_to_low") {
+      setAccommodations((prevAccommodations) =>
+        [...prevAccommodations].sort((a, b) => b.price - a.price)
+      );
+    } 
+  }, [sortOption]);
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = accommodations.slice(indexOfFirstItem, indexOfLastItem);
@@ -327,7 +342,7 @@ function Accommodations() {
   return (
     <>
       <section className="basis-1/3 w-full ~space-y-4/8">
-        <Sort settings={[{ value: "sort_1", text: "Sort 1" }]} />
+        <Sort settings={settings} onSortChange={handleSortChange} /> {/* Pass the handler to Sort */}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 lg:sticky top-4 ~gap-2/3">
           <div id="filter" className="flex flex-col h-fit rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
@@ -358,7 +373,7 @@ function Accommodations() {
                 disabled={!province}
               >
                 <option value="" className="font-bold">
-                  All
+                  Select a City
                 </option>
                 {cities.map((cityName) => (
                   <option key={cityName} value={cityName}>

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-
+import landingimg from '../images/1.png';
+import aboutimg from '../images/2.png';
 export default function Home() {
   const navigate = useNavigate();
 
@@ -12,20 +13,18 @@ export default function Home() {
     <>
       <section id="hero" className="~h-[40rem]/[50rem] ~pt-24/28 ~pb-4/8 justify-center items-center">
         <div className="relative h-full">
-          <LazyLoadImage src="https://picsum.photos/2000/720" width="1700" alt="sample" className="h-full rounded-xl object-cover object-center brightness-50" />
+          <LazyLoadImage src={landingimg} width="1700" alt="sample" className="h-full rounded-xl object-cover object-center brightness-50" />
 
-          {/* CENTER */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center px-16">
-            <p className="font-bold text-4xl md:~text-6xl/9xl text-center text-white">Header text</p>
-            <p className="font-normal ~text-sm/lg text-center text-white">Sub Text</p>
-
-            {/* <label className="flex items-center ~w-48/96 rounded-xl ~mt-6/8 ~py-1/2 ~px-4/6 ~text-xs/base bg-gray-100">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="~w-[0.875rem]/[1.125rem] fill-black">
-                <path d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
-              </svg>
-
-              <input type="text" className="w-full bg-gray-100 border-transparent focus:border-transparent focus:ring-0 ~text-sm/lg" placeholder="Select a Province" />
-            </label> */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-8 sm:px-16">
+            <p className="font-bold text-4xl md:text-6xl lg:text-7xl text-center text-white tracking-tight leading-tight">
+                <span className="text-blue-500 px-2 py-1">T</span>
+                <span className="text-white">ourist</span>
+                <span className="text-blue-500 px-2 py-1">C</span>
+                <span className="text-white">ation</span>
+            </p>
+            <p className="font-normal text-sm md:text-lg text-center text-white mt-4">
+                Plan your journey, explore new horizons, and save smartly.
+            </p>
           </div>
 
           {/* BOTTOM RIGHT */}
@@ -43,33 +42,32 @@ export default function Home() {
           <p className="font-bold ~text-2xl/4xl text-sky-500">About</p>
 
           <p className="font-normal ~text-lg/2xl text-gray-400">
-            By creating a visual guide along the way, the designer or developer can get input from the other people involved in the website such as the customer, their manager, and other members of
-            the team.
+          TouristCation is a web-based application developed by Triumvirate, a group of students from the University of Makati, aiming to promote Philippine tourism. The primary focus of the application is to highlight the beauty of Region 1, comprising the four provinces of La Union, Ilocos Norte, Ilocos Sur, and Pangasinan. TouristCation seeks to benefit both travel enthusiasts and local establishments. For travelers, TouristCation serves as a recommender system that generates personalized travel itineraries, including suggestions for accommodations and tourist attractions based on their preferences. For establishments, it offers a platform to gain visibility and attract visitors, promoting their services both locally and internationally.
           </p>
         </div>
-        <LazyLoadImage src="https://picsum.photos/1500/1200" alt="sample" className="md:~max-w-80/[50rem] rounded-xl object-cover object-center" />
+        <LazyLoadImage src={aboutimg} alt="sample" className="md:~max-w-80/[50rem] rounded-xl object-cover object-center" />
       </section>
 
       <section id="accomodations" className="~py-4/8 flex flex-col gap-6">
         <p className="font-bold ~text-4xl/6xl text-sky-500 text-center">Accommodations</p>
 
         <div className="flex flex-wrap gap-4 xl:flex-row h-full justify-center items-center">
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/17/f2/a3/a2/amazing-top-floor-outside.jpg?w=300&h=-1&s=1" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://cf.bstatic.com/xdata/images/hotel/max1024x768/474690754.jpg?k=bd627dc9cdbc92777bd9d589405170ff8aae7a75691fc4aec6058d65a46a2f8b&o=&hp=1" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://cf.bstatic.com/xdata/images/hotel/max500/348730897.jpg?k=4ba4d7845cf37553290d51a1dc2899cbe88b8870aa338bb0e061cc44be2f72d9&o=" alt="sample" className="flex-1 sm:~max-w-80/96 rounded-xl object-cover object-center" />
         </div>
       </section>
 
       <section id="gallery" className="~py-4/8 flex flex-col gap-6">
-        <p className="font-bold ~text-4xl/6xl text-sky-500 text-center">Gallery</p>
+        <p className="font-bold ~text-4xl/6xl text-sky-500 text-center">Tourist Attractions</p>
 
         <div className="flex flex-wrap gap-4 xl:flex-row h-full justify-center items-center">
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
-          <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/e2/3c/42/now-see-those-intricate.jpg?w=600&h=400&s=1" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/12/99/58/c7/img-20180410-110556-largejpg.jpg?w=500&h=-1&s=1" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://gttp.images.tshiftcdn.com/293476/x/0/blue-waters-and-green-landscape-in-mt-pinatubo-crater-lake.jpg?auto=format%2Ccompress&fit=crop&crop=focalpoint&h=207&fp-z=1.14&min-w=380&w=380" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1a/5c/bc/85/caption.jpg?w=400&h=300&s=1" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://ik.imagekit.io/tvlk/blog/2023/07/shutterstock_1291277695-3.jpg?tr=dpr-2,w-675" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
+          <LazyLoadImage src="https://i.pinimg.com/originals/c0/c3/66/c0c366b3a9a49c97477be9005b72ce4f.png" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
         </div>
       </section>
     </>

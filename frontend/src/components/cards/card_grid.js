@@ -66,7 +66,7 @@ Accommodation.propTypes = {
 function TouristSpot({ settings, isModal, toggleModal }) {
   return (
     <div className="flex-grow max-w-[1/2] flex flex-col rounded-xl overflow-hidden">
-      <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
+      <LazyLoadImage src={settings.link} alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
 
       <div className="bg-white p-3 space-y-2">
         <div className="space-y-3">
@@ -87,7 +87,7 @@ function TouristSpot({ settings, isModal, toggleModal }) {
 function IteneraryTouristSpot({ settings, isModal, toggleModal }) {
   return (
     <div className="flex-grow max-w-[1/2] flex flex-col rounded-xl overflow-hidden shadow">
-      <LazyLoadImage src="https://picsum.photos/1500" alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
+      <LazyLoadImage src={settings.link} alt="sample" className="aspect-[3/2] max-h-64 object-cover object-center bg-gray-400" />
 
       <div className="bg-white p-3 space-y-3">
         <div className="space-y-2">

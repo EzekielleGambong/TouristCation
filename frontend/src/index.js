@@ -24,7 +24,7 @@ export default function TouristCation() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LayoutDefault />}>
-          <Route index element={< Sample/>} />
+          <Route index element={< Home/>} />
           <Route path="/terms_and_conditions" element={<TermsAndConditions />} />
           <Route path="/privacy_policy" element={<PrivacyPolicy />} />
         </Route>

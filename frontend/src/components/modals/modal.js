@@ -118,7 +118,7 @@ function TouristSpot({ settings, onClose }) {
           <div className="relative transform overflow-hidden sm:w-full sm:max-w-2xl shadow-xl transition-all rounded-lg bg-white text-left sm:my-8">
             <div className="flex flex-col rounded-xl bg-gray-200">
               <div className="relative">
-                <LazyLoadImage src="https://picsum.photos/1400/720" width="800" alt="sample" className="h-full aspect-[5/3] object-center" />
+                <LazyLoadImage src={settings.link} width="800" alt="sample" className="h-full aspect-[5/3] object-center" />
                 <button className="absolute top-3 right-3 w-7 h-7 rounded-full transition-all bg-sky-500 hover:bg-sky-700 fill-white p-1" onClick={onClose}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
@@ -174,7 +174,7 @@ function IteneraryTouristSpot({ settings, onClose }) {
           <div className="relative transform overflow-hidden sm:w-full sm:max-w-2xl shadow-xl transition-all rounded-lg bg-white text-left sm:my-8">
             <div className="flex flex-col rounded-xl bg-gray-200">
               <div className="relative">
-                <LazyLoadImage src="https://picsum.photos/1400/720" width="800" alt="sample" className="h-full aspect-[5/3] object-center bg-gray-400" />
+                <LazyLoadImage src={settings.link} width="800" alt="sample" className="h-full aspect-[5/3] object-center bg-gray-400" />
                 <button className="absolute top-3 right-3 w-7 h-7 rounded-full transition-all bg-sky-500 hover:bg-sky-700 fill-white p-1" onClick={onClose}>
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960">
                     <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />

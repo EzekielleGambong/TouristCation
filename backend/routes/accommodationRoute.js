@@ -43,15 +43,22 @@ router.post('/', async (request, response) => {
 
 router.get('/', async (request, response) => {
   try {
-    // Extract location and paxPerRoom from query parameters
-    const { pax, city } = request.query;
     
-    // Build a filter object
-    const filter = {};
-    if (city) filter.city = city;
-    if (pax) filter.pax = parseInt(pax);
+    const {province, pax, city } = request.query;
+    const provinceUpper = province ? province.toUpperCase() : undefined;
+    const filterboth = {};
+    if (city) filterboth.city = city;
+    if (pax) filterboth.pax = parseInt(pax);
 
-    // Find accommodations based on filter criteria
+
+    const filteronly = {};
+    if (provinceUpper) filteronly.province = provinceUpper;
+    if (pax) filteronly.pax = parseInt(pax);
+
+    
+    const filter = (city === "All") ? filteronly : filterboth;
+
+    // Find accommodations based on the selected filter
     const acco = await Accommodationinformation.find(filter);
 
     return response.status(200).json(acco);
