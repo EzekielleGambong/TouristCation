@@ -22,10 +22,10 @@ export function Knapsack(touristSpotsBudget, budgetCap, accommodation, touristTy
       const maxBudgetPerSpot = (budgetCap / 5) * type.rating;
 
       const spots = touristSpots
-        .filter((spot) => spot.typeOfAttraction === type.type)
+        .filter((spot) => spot.typeOfAttractions === type.type)
         .map((spot) => ({
           ...spot,
-          distance: calculateDistance(accommodation.coordinates, spot.location),
+          distance: calculateDistance(accommodation.coordinates, spot.locationCoordinates),
           totalCost: spot.entranceFee + spot.additionalFee + maxBudgetPerSpot, // Calculate full cost
         }))
         .sort((a, b) => a.distance - b.distance); // Prioritize closest spots

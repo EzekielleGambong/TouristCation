@@ -62,6 +62,10 @@ const attractionSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    province: {
+      type: String,
+      required: false,
+    },
   }
 );
 

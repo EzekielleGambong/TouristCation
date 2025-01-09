@@ -3,9 +3,31 @@ import { Attractioninformation } from '../models/tourists.js';
 const router = express.Router();
 
 
+// router.get('/', async (request, response) => {
+//   try {
+//     const acco = await Attractioninformation.find({});
+
+//     return response.status(200).json(acco);
+//   } catch (error) {
+//     console.log(error.message);
+//     response.status(500).send({ message: error.message });
+//   }
+// });
+
 router.get('/', async (request, response) => {
   try {
-    const acco = await Attractioninformation.find({});
+    
+    const {province} = request.query;
+    const provinceUpper = province ? province.toUpperCase() : undefined;
+    
+
+
+    const filter = {};
+    if (provinceUpper) filter.province = provinceUpper;
+
+    
+
+    const acco = await Attractioninformation.find(filter);
 
     return response.status(200).json(acco);
   } catch (error) {

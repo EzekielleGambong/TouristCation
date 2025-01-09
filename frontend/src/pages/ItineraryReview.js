@@ -177,7 +177,7 @@ export default function ItineraryReview() {
         </div>
 
         <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {touristSpots[0].map((settings, index) => (
+          {touristSpots.map((settings, index) => (
             <CardGrid key={index} settings={settings} />
           ))}
         </div>

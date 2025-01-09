@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useStorePlan } from "../hooks/useStore";
-import touristSpots from "./file.json";
 
 import PropTypes from "prop-types";
 import landingimg from '../images/6.png';
@@ -85,6 +84,8 @@ function Plan() {
   };
 
   const {
+    setTouristSpots,
+    touristSpots,
     setStayPeriodFrom,
     setStayPeriodTo,
     setNoOfTravellers,
@@ -277,7 +278,7 @@ function Accommodations() {
       "Urdaneta City",
       "Villasis"]
   };
-  const { setProvince, province } = useStorePlan((state) => state);
+  const { setProvince, province, touristSpots, setTouristSpots } = useStorePlan((state) => state);
   const [cities, setCities] = useState([]);
 
   const [accommodations, setAccommodations] = useState([]);
@@ -292,6 +293,23 @@ function Accommodations() {
     setCities(provinceCityMap[province] || []);
     setCity("");
   }, [province]);
+
+  const fetchTouristSpots = async () => {
+    try {
+    
+
+      const queryParams = new URLSearchParams({
+        ...(province && { province }),
+      }).toString();
+
+      const response = await fetch(`http://localhost:8080/touristspots?${queryParams}`);
+      const data = await response.json();
+      console.log("Tourist", queryParams);
+      setTouristSpots(data);
+    } catch (error) {
+      console.error("Error fetching Tourists:", error);
+    }
+  };
 
   const fetchFilteredAccommodations = async () => {
     try {
@@ -317,6 +335,7 @@ function Accommodations() {
       console.error("Error fetching accommodations:", error);
     }
   };
+  
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
@@ -400,9 +419,17 @@ function Accommodations() {
               />
             </label>
 
-            <button type="button" onClick={fetchFilteredAccommodations} className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
+            <button
+              type="button"
+              onClick={() => {
+                fetchFilteredAccommodations();
+                fetchTouristSpots();
+              }}
+              className="w-full rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase text-xs font-bold text-white py-2"
+            >
               Search
             </button>
+
           </div>
 
           <Plan />

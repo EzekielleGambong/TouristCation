@@ -44,6 +44,11 @@ export default function ModalPlan({ isOpen, onClose, touristSpotsBudget, budgetC
     setTouristSpots(result.settings);
     setExcessBudget(result.excessBudget);
     navigate("/itinerary-review/");
+    console.log("Modal", result);
+    console.log("Modal", touristSpotsBudget);
+    console.log("Modal", budgetCap);
+    console.log("Modal", accommodation);
+    console.log("Modal", touristSpots);
   };
 
   return (

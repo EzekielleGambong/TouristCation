@@ -189,7 +189,7 @@ function IteneraryTouristSpot({ settings, onClose }) {
                     Distance: <span className="font-normal">{settings.distance} km</span>
                   </p>
                   <p className="font-bold ~text-xs/base">
-                    Type of Attraction: <span className="font-normal">{settings.typeOfAttraction}</span>
+                    Type of Attraction: <span className="font-normal">{settings.typeOfAttractions}</span>
                   </p>
                   <p className="font-bold ~text-xs/base">
                     Address: <span className="font-normal">{settings.address}</span>
@@ -230,7 +230,7 @@ IteneraryTouristSpot.propTypes = {
     natureOfAttraction: PropTypes.string,
     classification: PropTypes.string.isRequired,
     operatingHours: PropTypes.string,
-    typeOfAttraction: PropTypes.string.isRequired,
+    typeOfAttractions: PropTypes.string.isRequired,
     category: PropTypes.string.isRequired,
     dataConnectivity: PropTypes.string,
     securityHazards: PropTypes.string,
