@@ -23,7 +23,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
-
+import TravelStylePrediction from "./components/TravelStylePrediction";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export default function TouristCation() {

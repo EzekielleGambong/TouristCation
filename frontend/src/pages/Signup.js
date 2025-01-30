@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signupUser } from "../services/api";
+import { motion } from "framer-motion";
 
 function Signup() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "user", // Default role is "user"
-    adminKey: "", // Optional key for admin signup
+    role: "user",
+    adminKey: "",
   });
   const [error, setError] = useState("");
   const navigate = useNavigate();
@@ -25,20 +26,29 @@ function Signup() {
       setError(err.response?.data?.message || "Error signing up");
     }
   };
-  
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Signup</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <motion.div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-indigo-300"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+        <div className="flex flex-col items-center mb-6">
+          <img src="/logo.png" alt="Logo" className="w-16 h-16 mb-2" />
+          <h1 className="text-3xl font-extrabold text-gray-800">Join Us</h1>
+          <p className="text-gray-500">Start your journey with us today.</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <input
               type="text"
               placeholder="Name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -47,7 +57,7 @@ function Signup() {
               placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
@@ -55,15 +65,19 @@ function Signup() {
               type="password"
               placeholder="Password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
           <div>
             <select
               value={formData.role}
-              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                setFormData({ ...formData, role: e.target.value })
+              }
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="user">User</option>
               <option value="admin">Admin</option>
@@ -75,32 +89,34 @@ function Signup() {
                 type="text"
                 placeholder="Admin Key"
                 value={formData.adminKey}
-                onChange={(e) => setFormData({ ...formData, adminKey: e.target.value })}
-                className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                onChange={(e) =>
+                  setFormData({ ...formData, adminKey: e.target.value })
+                }
+                className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
             </div>
           )}
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+            className="w-full bg-indigo-500 text-white py-3 rounded-lg shadow-md font-semibold hover:bg-indigo-600 transition"
           >
-            Signup
+            Sign Up
           </button>
         </form>
-        <div className="mt-4 text-center">
+        <div className="mt-6 text-center">
           <p className="text-gray-600">
             Already have an account?{" "}
             <button
               onClick={() => navigate("/login")}
-              className="text-blue-500 hover:underline"
+              className="text-indigo-500 hover:underline"
             >
               Login
             </button>
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

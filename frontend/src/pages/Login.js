@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
+import { motion } from "framer-motion";
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -25,17 +26,27 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <motion.div
+      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-blue-300"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.5 }}
+    >
+      <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
+        <div className="flex flex-col items-center mb-6">
+          <img src="/logo.png" alt="Logo" className="w-16 h-16 mb-2" />
+          <h1 className="text-3xl font-extrabold text-gray-800">Welcome Back</h1>
+          <p className="text-gray-500">Login to access your account.</p>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <input
               type="email"
               placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div>
@@ -43,31 +54,33 @@ function Login() {
               type="password"
               placeholder="Password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           {error && <p className="text-red-500 text-sm">{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600 transition"
+            className="w-full bg-blue-500 text-white py-3 rounded-lg shadow-md font-semibold hover:bg-blue-600 transition"
           >
             Login
           </button>
         </form>
-        <div className="mt-4 text-center">
+        <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
             <button
               onClick={() => navigate("/signup")}
               className="text-blue-500 hover:underline"
             >
-              Signup
+              Sign Up
             </button>
           </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

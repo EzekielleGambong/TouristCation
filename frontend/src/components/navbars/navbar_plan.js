@@ -18,10 +18,10 @@ export default function NavbarPlan() {
               </a>
             </div>
 
-            {/* CONTACT */}
+            {/* Go back home */}
             <div className="hidden sm:flex flex-shrink-0 items-center">
               <a href="#contact_us" className="font-bold text-lg text-sky-500">
-                Contact Us
+                Home
               </a>
             </div>
           </div>

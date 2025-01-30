@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export default function NavbarDefault() {
+
+  const navigate = useNavigate();
+  
+    const handlePlan = () => {
+      navigate("/profile/");
+    };
+    
   const [isOpen, setIsOpen] = useState(false);
 
   // # ~ ~ ~ ~ ~ # PAGES # ~ ~ ~ ~ ~ # //
@@ -92,11 +99,11 @@ export default function NavbarDefault() {
               </div>
             </div>
 
-            {/* CONTACT */}
+            {/* Profile */}
             <div className="hidden xl:flex flex-shrink-0 items-center">
-              <a href="#contact_us" className="font-bold text-lg text-sky-500">
-                Contact Us
-              </a>
+              <button  className="font-bold text-lg text-sky-500" onClick={handlePlan}>
+                Profile
+              </button>
             </div>
           </div>
         </div>
