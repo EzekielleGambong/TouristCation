@@ -24,6 +24,14 @@ import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
 import TravelStylePrediction from "./components/TravelStylePrediction";
+
+
+// # ~ ~ ~ ~ ~ # INACTIVITY CONTEXT # ~ ~ ~ ~ ~ # //
+import { InactivityProvider, InactivityContext } from "./components/utils_account/InactivityContext"; // Create this file (see below)
+import LockScreen from "./components/utils_account/LockScreen"; // Create this component (see below)
+
+
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 export default function TouristCation() {
@@ -39,6 +47,8 @@ export default function TouristCation() {
 
   return (
     <BrowserRouter>
+    {/* Lock Screen (renders globally when session is locked) */}
+    {/* <LockScreen /> */}
       <Routes>
         {/* Redirect root path to Signup */}
         <Route path="/" element={<Navigate to="/signup" replace />} />
@@ -86,6 +96,8 @@ export default function TouristCation() {
             </PrivateRoute>
           }
         />
+
+
       </Routes>
     </BrowserRouter>
   );
@@ -93,6 +105,9 @@ export default function TouristCation() {
 
 root.render(
   <React.StrictMode>
-    <TouristCation />
+    {/* Wrap the entire app with InactivityProvider */}
+    {/* <InactivityProvider> */}
+      <TouristCation />
+    {/* </InactivityProvider> */}
   </React.StrictMode>
 );

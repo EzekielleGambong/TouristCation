@@ -1,4 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 export default function NavbarPlan() {
+  const navigate = useNavigate();
+    
+      const handlePlan = () => {
+        navigate("page/home");
+      };
   return (
     <nav className="absolute top-0 w-full bg-gray-100">
       <div className="sm:container sm:mx-auto py-2 px-2 sm:px-12">
@@ -13,16 +20,16 @@ export default function NavbarPlan() {
           <div className="flex flex-1 items-center justify-center sm:justify-between">
             {/* ICON */}
             <div className="flex flex-shrink-0 items-center">
-              <a href="/" className="font-extrabold ~text-xl/4xl text-sky-500">
+              <button className="font-extrabold ~text-xl/4xl text-sky-500" onClick={handlePlan}>
                 TouristCation
-              </a>
+              </button>
             </div>
 
             {/* Go back home */}
             <div className="hidden sm:flex flex-shrink-0 items-center">
-              <a href="#contact_us" className="font-bold text-lg text-sky-500">
+              <button className="font-bold text-lg text-sky-500" onClick={handlePlan}>
                 Home
-              </a>
+              </button>
             </div>
           </div>
         </div>

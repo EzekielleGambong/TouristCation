@@ -5,7 +5,8 @@ import { motion } from "framer-motion";
 
 function Signup() {
   const [formData, setFormData] = useState({
-    name: "",
+    fname: "",
+    lname: "",
     email: "",
     password: "",
     role: "user",
@@ -16,7 +17,7 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password) {
+    if (!formData.fname || !formData.lname || !formData.email || !formData.password) {
       return setError("All fields are required");
     }
     try {
@@ -45,9 +46,18 @@ function Signup() {
           <div>
             <input
               type="text"
-              placeholder="Name"
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="First Name"
+              value={formData.fname}
+              onChange={(e) => setFormData({ ...formData, fname: e.target.value })}
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
+              placeholder="Last Name"
+              value={formData.lname}
+              onChange={(e) => setFormData({ ...formData, lname: e.target.value })}
               className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>

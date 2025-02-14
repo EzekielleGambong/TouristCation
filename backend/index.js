@@ -5,12 +5,18 @@ import accRoute from "./routes/accommodationRoute.js"
 import spotsRoute from "./routes/touristspotsRoute.js"
 import userRoutes from './routes/userRoute.js';
 import savedLocationRoutes from './routes/savedLocationRoute.js';
-
+import path from "path";
+import { fileURLToPath } from "url";
 const app = express();
 import cors from 'cors';
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 // app.use(cors());
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/accommodation', accRoute);
 app.use('/touristspots', spotsRoute);
 app.use('/users', userRoutes);

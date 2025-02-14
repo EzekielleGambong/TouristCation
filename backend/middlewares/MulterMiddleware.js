@@ -1,25 +1,23 @@
-const multer = require("multer");
-const { v4: uuidv4 } = require("uuid");
-const path = require("path");
+import multer from "multer";
+import path from "path";
 
+// Configure storage
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./public/uploads");
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Save images in 'uploads' folder
   },
-  filename: function (req, file, cb) {
-    cb(null, `${uuidv4()}_${path.extname(file.originalname)}`);
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
   },
 });
 
+// File filter to allow only images
 const fileFilter = (req, file, cb) => {
-  const allowedFileTypes = ["image/jpeg", "image/jpg", "image/png"];
-  if (allowedFileTypes.includes(file.mimetype)) {
+  if (file.mimetype.startsWith("image/")) {
     cb(null, true);
   } else {
-    cb(null, false);
+    cb(new Error("Invalid file type, only images are allowed!"), false);
   }
 };
 
-const uploadMiddleware = multer({ storage, fileFilter });
-
-module.exports = uploadMiddleware;
+export const upload = multer({ storage, fileFilter });
