@@ -11,7 +11,7 @@ const app = express();
 
 import cors from 'cors';
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://cation-646fls9qa-ezekiellegambongs-projects.vercel.app'],
+  origin: ['http://localhost:3000', 'tourist-cation.vercel.app'],
   credentials: true
 }));
 app.use(express.json());
