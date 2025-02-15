@@ -8,10 +8,16 @@ import savedLocationRoutes from './routes/savedLocationRoute.js';
 import path from "path";
 import { fileURLToPath } from "url";
 const app = express();
+
 import cors from 'cors';
-app.use(cors({ origin: 'http://localhost:3000' }));
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://cation-646fls9qa-ezekiellegambongs-projects.vercel.app'],
+  credentials: true
+}));
 app.use(express.json());
 // app.use(cors());
+
+
 import dotenv from 'dotenv';
 dotenv.config();
 
