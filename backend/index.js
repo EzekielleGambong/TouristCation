@@ -10,9 +10,12 @@ import { fileURLToPath } from "url";
 const app = express();
 
 import cors from 'cors';
+
 app.use(cors({
-  origin: ['http://localhost:3000', 'tourist-cation.vercel.app'],
-  credentials: true
+    origin: ['http://localhost:3000'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
 }));
 app.use(express.json());
 // app.use(cors());
