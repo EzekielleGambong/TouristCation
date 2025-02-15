@@ -1,5 +1,5 @@
 import express from "express"
-import { PORT, mongoDBURL } from "./config.js"
+// import { PORT, mongoDBURL } from "./config.js"
 import mongoose from 'mongoose';
 import accRoute from "./routes/accommodationRoute.js"
 import spotsRoute from "./routes/touristspotsRoute.js"
@@ -12,10 +12,13 @@ import cors from 'cors';
 app.use(cors({ origin: 'http://localhost:3000' }));
 app.use(express.json());
 // app.use(cors());
+import dotenv from 'dotenv';
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
+const PORT = process.env.PORT || 3000;
+const mongoDBURL = process.env.mongoDBURL;
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/accommodation', accRoute);
 app.use('/touristspots', spotsRoute);

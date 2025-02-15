@@ -1,5 +1,14 @@
 {
   "name": "touristcation",
+  "scripts": {
+    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm start",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
   "version": "1.0.0",
   "description": "Guide to tourist",
   "main": "index.js",
