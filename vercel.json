@@ -5,17 +5,17 @@
   "installCommand": "cd frontend && npm install",
   "framework": "create-react-app",
   "functions": {
-    "backend_algo/app.py": {
+    "api/*.py": {
       "runtime": "@vercel/python@3.1.0",
       "memory": 1024,
       "maxDuration": 10
     }
   },
   "routes": [
-    { "src": "/predict", "methods": ["POST"], "dest": "backend_algo/app.py" },
+    { "src": "/api/predict", "methods": ["POST"], "dest": "/api/predict" },
     { "src": "/(.*)", "dest": "/frontend/$1" }
   ],
   "env": {
-    "PYTHONPATH": "backend_algo"
+    "PYTHONPATH": "."
   }
 }
