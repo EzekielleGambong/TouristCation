@@ -17,6 +17,10 @@ try:
     le_travelStyle = joblib.load(os.path.join(backend_algo_dir, 'le_travelStyle.pkl'))
 except Exception as e:
     print(f"Error loading models: {str(e)}")
+    clf = None
+    le_attraction = None
+    le_category = None
+    le_travelStyle = None
 
 def predict(request_data):
     try:
@@ -25,11 +29,11 @@ def predict(request_data):
         categories = request_data['category']
         
         # Transform input using label encoders
-        attractions_encoded = le_attraction.transform(attractions)
-        categories_encoded = le_category.transform(categories)
+        attractions_encoded = le_attraction.transform([attractions])[0]
+        categories_encoded = le_category.transform([categories])[0]
         
         # Create feature array
-        X = np.column_stack((attractions_encoded, categories_encoded))
+        X = np.array([[attractions_encoded, categories_encoded]])
 
         # Make predictions
         predictions = clf.predict(X)
