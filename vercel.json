@@ -1,6 +1,15 @@
 {
-    "buildCommand": "cd frontend && npm run build",
-    "outputDirectory": "frontend/build",
-    "installCommand": "cd frontend && npm install",
-    "framework": "create-react-app"
-  }
+  "buildCommand": "cd frontend && npm run build",
+  "outputDirectory": "frontend/build",
+  "installCommand": "cd frontend && npm install",
+  "framework": "create-react-app",
+  "functions": {
+    "backend_algo/app.py": {
+      "runtime": "python3.9"
+    }
+  },
+  "routes": [
+    { "src": "/predict", "dest": "backend_algo/app.py" },
+    { "src": "/(.*)", "dest": "/frontend/$1" }
+  ]
+}

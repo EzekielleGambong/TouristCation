@@ -4,7 +4,7 @@ import joblib
 import pandas as pd
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Load the model and encoders
 clf = joblib.load('model.pkl')
