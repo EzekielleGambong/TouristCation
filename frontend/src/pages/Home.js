@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import landingimg from '../images/1.png';
 import aboutimg from '../images/2.png';
+import MLPredictButton from '../components/MLPredictButton';
+
 export default function Home() {
   const navigate = useNavigate();
 
@@ -70,6 +72,8 @@ export default function Home() {
           <LazyLoadImage src="https://i.pinimg.com/originals/c0/c3/66/c0c366b3a9a49c97477be9005b72ce4f.png" alt="sample" className="flex-1 sm:max-w-96 rounded-xl object-cover object-center" />
         </div>
       </section>
+
+      <MLPredictButton />
     </>
   );
 }
