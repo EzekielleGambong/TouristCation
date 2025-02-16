@@ -1,7 +1,7 @@
 from http.server import BaseHTTPRequestHandler
 import json
 import joblib
-import pandas as pd
+import numpy as np
 import os
 from urllib.parse import parse_qs
 
@@ -21,13 +21,18 @@ except Exception as e:
 def predict(request_data):
     try:
         # Parse and preprocess input
-        data = request_data
-        df = pd.DataFrame(data)
-        df['typeOfAttractions'] = le_attraction.transform(df['typeOfAttractions'])
-        df['category'] = le_category.transform(df['category'])
+        attractions = request_data['typeOfAttractions']
+        categories = request_data['category']
+        
+        # Transform input using label encoders
+        attractions_encoded = le_attraction.transform(attractions)
+        categories_encoded = le_category.transform(categories)
+        
+        # Create feature array
+        X = np.column_stack((attractions_encoded, categories_encoded))
 
         # Make predictions
-        predictions = clf.predict(df)
+        predictions = clf.predict(X)
         decoded_predictions = le_travelStyle.inverse_transform(predictions)
 
         return {'predictions': decoded_predictions.tolist()}
