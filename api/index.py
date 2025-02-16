@@ -1,23 +1,22 @@
 from http.server import BaseHTTPRequestHandler
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+import json
 import joblib
 import pandas as pd
 import os
-import json
-
-app = Flask(__name__)
-CORS(app)
+from urllib.parse import parse_qs
 
 # Get the directory containing the current file
 current_dir = os.path.dirname(os.path.abspath(__file__))
 backend_algo_dir = os.path.join(os.path.dirname(current_dir), 'backend_algo')
 
 # Load the model and encoders with absolute paths
-clf = joblib.load(os.path.join(backend_algo_dir, 'model.pkl'))
-le_attraction = joblib.load(os.path.join(backend_algo_dir, 'le_attraction.pkl'))
-le_category = joblib.load(os.path.join(backend_algo_dir, 'le_category.pkl'))
-le_travelStyle = joblib.load(os.path.join(backend_algo_dir, 'le_travelStyle.pkl'))
+try:
+    clf = joblib.load(os.path.join(backend_algo_dir, 'model.pkl'))
+    le_attraction = joblib.load(os.path.join(backend_algo_dir, 'le_attraction.pkl'))
+    le_category = joblib.load(os.path.join(backend_algo_dir, 'le_category.pkl'))
+    le_travelStyle = joblib.load(os.path.join(backend_algo_dir, 'le_travelStyle.pkl'))
+except Exception as e:
+    print(f"Error loading models: {str(e)}")
 
 def predict(request_data):
     try:
@@ -35,16 +34,54 @@ def predict(request_data):
     except Exception as e:
         return {'error': str(e)}, 500
 
-class handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        content_length = int(self.headers['Content-Length'])
-        request_body = self.rfile.read(content_length)
-        data = json.loads(request_body)
-        
-        result = predict(data)
-        
-        self.send_response(200)
-        self.send_header('Content-type', 'application/json')
-        self.end_headers()
-        self.wfile.write(json.dumps(result).encode())
+def handler(request):
+    if request.method == 'POST':
+        try:
+            # Read the request body
+            content_length = int(request.headers.get('Content-Length', 0))
+            body = request.rfile.read(content_length)
+            data = json.loads(body)
+            
+            # Make prediction
+            result = predict(data)
+            
+            # Send response
+            request.send_response(200)
+            request.send_header('Content-Type', 'application/json')
+            request.send_header('Access-Control-Allow-Origin', '*')
+            request.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+            request.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            request.end_headers()
+            request.wfile.write(json.dumps(result).encode())
+            return
+            
+        except Exception as e:
+            request.send_response(500)
+            request.send_header('Content-Type', 'application/json')
+            request.send_header('Access-Control-Allow-Origin', '*')
+            request.end_headers()
+            request.wfile.write(json.dumps({'error': str(e)}).encode())
+            return
+            
+    elif request.method == 'OPTIONS':
+        # Handle CORS preflight request
+        request.send_response(200)
+        request.send_header('Access-Control-Allow-Origin', '*')
+        request.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        request.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        request.end_headers()
         return
+        
+    else:
+        request.send_response(405)
+        request.send_header('Content-Type', 'application/json')
+        request.end_headers()
+        request.wfile.write(json.dumps({'error': 'Method not allowed'}).encode())
+        return
+
+class Handler(BaseHTTPRequestHandler):
+    def do_POST(self):
+        handler(self)
+        
+    def do_OPTIONS(self):
+        handler(self)
