@@ -32,56 +32,38 @@ def predict(request_data):
 
         return {'predictions': decoded_predictions.tolist()}
     except Exception as e:
-        return {'error': str(e)}, 500
+        return {'error': str(e)}
 
-def handler(request):
-    if request.method == 'POST':
+class Handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.end_headers()
+        
+    def do_POST(self):
         try:
             # Read the request body
-            content_length = int(request.headers.get('Content-Length', 0))
-            body = request.rfile.read(content_length)
+            content_length = int(self.headers.get('Content-Length', 0))
+            body = self.rfile.read(content_length)
             data = json.loads(body)
             
             # Make prediction
             result = predict(data)
             
             # Send response
-            request.send_response(200)
-            request.send_header('Content-Type', 'application/json')
-            request.send_header('Access-Control-Allow-Origin', '*')
-            request.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-            request.send_header('Access-Control-Allow-Headers', 'Content-Type')
-            request.end_headers()
-            request.wfile.write(json.dumps(result).encode())
-            return
+            self.send_response(200)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+            self.end_headers()
+            self.wfile.write(json.dumps(result).encode())
             
         except Exception as e:
-            request.send_response(500)
-            request.send_header('Content-Type', 'application/json')
-            request.send_header('Access-Control-Allow-Origin', '*')
-            request.end_headers()
-            request.wfile.write(json.dumps({'error': str(e)}).encode())
-            return
-            
-    elif request.method == 'OPTIONS':
-        # Handle CORS preflight request
-        request.send_response(200)
-        request.send_header('Access-Control-Allow-Origin', '*')
-        request.send_header('Access-Control-Allow-Methods', 'POST, OPTIONS')
-        request.send_header('Access-Control-Allow-Headers', 'Content-Type')
-        request.end_headers()
-        return
-        
-    else:
-        request.send_response(405)
-        request.send_header('Content-Type', 'application/json')
-        request.end_headers()
-        request.wfile.write(json.dumps({'error': 'Method not allowed'}).encode())
-        return
-
-class Handler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        handler(self)
-        
-    def do_OPTIONS(self):
-        handler(self)
+            self.send_response(500)
+            self.send_header('Content-Type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.end_headers()
+            self.wfile.write(json.dumps({'error': str(e)}).encode())
