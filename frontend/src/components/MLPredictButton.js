@@ -16,7 +16,7 @@ const MLPredictButton = () => {
         category: "Adventure"
       }];
 
-      const response = await axios.post('/api/predict', data);
+      const response = await axios.post('/api', data);
       setPrediction(response.data.predictions[0]);
     } catch (err) {
       setError(err.message || 'Failed to get prediction');

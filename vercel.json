@@ -4,18 +4,8 @@
   "outputDirectory": "frontend/build",
   "installCommand": "cd frontend && npm install",
   "framework": "create-react-app",
-  "functions": {
-    "api/*.py": {
-      "runtime": "@vercel/python@3.8.0",
-      "memory": 1024,
-      "maxDuration": 10
-    }
-  },
   "routes": [
-    { "src": "/api/predict", "methods": ["POST"], "dest": "/api/predict" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
     { "src": "/(.*)", "dest": "/frontend/$1" }
-  ],
-  "env": {
-    "PYTHONPATH": "."
-  }
+  ]
 }
