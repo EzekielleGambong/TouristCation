@@ -53,7 +53,13 @@ const authorizeRole = (role) => (req, res, next) => {
 // Sign Up
 router.post('/signup', async (req, res) => {
   try {
-    const { fname, lname, email, password, role, adminKey, address, region, city, country, zip, phonenumber} = req.body;
+    const {
+      fname, lname, email, password, role, adminKey, address, region,
+      city, country, zip, phonenumber, photo = '',
+      attractionPreference = '', activitiesPreference = '', travelStylePrediction = '',
+      averagePricePreference = 0, ambiancePreference = '', 
+      averagePriceShopPreference = 0, storeTypePreference = ''
+    } = req.body;
 
     // Ensure only users with a valid adminKey can sign up as admin
     if (role === "admin" && adminKey !== process.env.ADMIN_KEY) {
@@ -78,6 +84,14 @@ router.post('/signup', async (req, res) => {
       country,
       zip,
       phonenumber,
+      photo,
+      attractionPreference,
+      activitiesPreference,
+      travelStylePrediction,
+      averagePricePreference,
+      ambiancePreference,
+      averagePriceShopPreference,
+      storeTypePreference,
     });
 
     res.status(201).json({ message: "User created successfully", user: newUser });

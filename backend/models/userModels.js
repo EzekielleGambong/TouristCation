@@ -13,6 +13,14 @@ const userSchema = mongoose.Schema({
   zip: { type: Number, required: false },
   phonenumber: { type: Number, required: false },
   photo: { type: String }, 
+  attractionPreference: { type: String, required: false },
+  activitiesPreference: { type: String, required: false },
+  travelStylePrediction: { type: String, required: false },
+  averagePricePreference: { type: Number, required: false },
+  ambiancePreference: { type: String, required: false },
+  averagePriceShopPreference: { type: Number, required: false },
+  storeTypePreference: { type: String, required: false },
+  country: { type: String, required: false },
 }, { timestamps: true });
 
 export const User = mongoose.model('User', userSchema);

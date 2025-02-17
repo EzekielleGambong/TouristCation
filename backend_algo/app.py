@@ -2,6 +2,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 import joblib
 import pandas as pd
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+MONGO_URI = os.getenv("mongoDBURL")
+
+client = MongoClient(MONGO_URI)
+db = client["TouristCation"]
+food_collection = db["food_collection"]  # Change to your collection name
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})

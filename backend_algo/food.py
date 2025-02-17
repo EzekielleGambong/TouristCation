@@ -1,10 +1,22 @@
+import os
 import pandas as pd
+import joblib
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import train_test_split
-import joblib
+from pymongo import MongoClient
+from dotenv import load_dotenv
 
-# Load Data
-data = pd.read_csv("food_cleaned.csv", encoding="ISO-8859-1")
+# Load environment variables
+load_dotenv()
+
+MONGO_URI = os.getenv("mongoDBURL")
+client = MongoClient(MONGO_URI)
+db = client["TouristCation"]
+collection = db["food"]  # Change this to your actual collection name
+
+# Fetch Data from MongoDB
+data_cursor = collection.find({}, {"_id": 0})  # Exclude MongoDB _id field
+data = pd.DataFrame(list(data_cursor))
 
 # Define category mapping
 category_mapping = {"Budget-Friendly": 0, "Moderate": 1, "Luxury": 2}
@@ -36,3 +48,4 @@ tree.fit(X_train, y_train)
 # Save the model and category mapping
 joblib.dump(tree, "food_model.pkl")
 joblib.dump(category_mapping, "category_mapping.pkl")
+print("Model trained and saved")
