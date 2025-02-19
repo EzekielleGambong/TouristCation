@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { fetchProfile } from "../services/api";
+import { updateProfile } from "../services/api";
 import axios from "axios";
 
 const FoodPrediction = () => {
@@ -11,11 +13,12 @@ const FoodPrediction = () => {
   const [prediction, setPrediction] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-
+  const [profile, setProfile] = useState(null);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setUserInput({ ...userInput, [name]: value });
+    setUserInput((prev) => ({ ...prev, [name]: value }));
   };
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,6 +26,7 @@ const FoodPrediction = () => {
     setError("");
 
     try {
+      await updateProfile(profile);
       const response = await axios.post("http://localhost:5000/predict_food", userInput);
       setPrediction(response.data.predicted_category);
     } catch (error) {
@@ -32,7 +36,26 @@ const FoodPrediction = () => {
       setIsLoading(false);
     }
   };
-
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const { data } = await fetchProfile();
+        console.log("Fetched Profile Data:", data); // Debug log
+        setProfile(data);
+  
+        setUserInput({
+          average_price_range: data.average_price_range ?? "", // Use ?? to prevent null values
+          ambiance: data.ambiance ?? "",
+          popularity: data.popularity ?? "",
+        });
+      } catch (err) {
+        console.error("Error fetching profile:", err);
+      }
+    };
+    loadProfile();
+  }, []);
+  
+  
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
       <h1 className="text-3xl font-semibold text-center mb-6">Food Price Category Predictor</h1>

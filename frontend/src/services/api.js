@@ -23,6 +23,8 @@ export const loginUser = (formData) => API.post("/users/login", formData);
 export const signupUser = (formData) => API.post("/users/signup", formData);
 export const fetchProfile = () => API.get("/users/profile");
 export const fetchAdminData = () => API.get("/users/admin-data");
+export const travelstyleupdate = (newInput) => API.put("/users/travel", newInput);
+
 export const updateProfile = (updatedProfile) => API.put("/users/profile", updatedProfile);
 
 export default API;
