@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api";
 import Predictions from "../components/layouts"; // Import the modal component
 import { motion } from "framer-motion";
+import logo from '../images/4.png';
 
 function Login() {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -18,9 +19,11 @@ function Login() {
       localStorage.setItem("role", data.role);
 
       // Check if required fields are missing
-      if (!data.user.travelStylePrediction || data.user.travelStylePrediction === "" ||
-          !data.user.averagePricePreference || data.user.averagePricePreference === 0 ||
-          !data.user.averagePriceShopPreference || data.user.averagePriceShopPreference === 0) {
+      if (!data.user.travelStylePrediction || data.user.travelStylePrediction === "" 
+          // ||
+          // !data.user.averagePricePreference || data.user.averagePricePreference === 0 ||
+          // !data.user.averagePriceShopPreference || data.user.averagePriceShopPreference === 0
+          ){
         setShowPredictions(true); // Show modal if fields are missing
       } else {
         navigate(data.role === "admin" ? "/admin" : "/page/home");
@@ -44,7 +47,7 @@ function Login() {
         >
           <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
             <div className="flex flex-col items-center mb-6">
-              <img src="/logo.png" alt="Logo" className="w-16 h-16 mb-2" />
+              <img src={logo} alt="Logo" className="w-40 h-20 mb-2" />
               <h1 className="text-3xl font-extrabold text-gray-800">Welcome Back</h1>
               <p className="text-gray-500">Login to access your account.</p>
             </div>

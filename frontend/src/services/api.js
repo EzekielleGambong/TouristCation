@@ -21,10 +21,13 @@ export const uploadImage = (formData) =>
   });
 export const loginUser = (formData) => API.post("/users/login", formData);
 export const signupUser = (formData) => API.post("/users/signup", formData);
-export const fetchProfile = () => API.get("/users/profile");
 export const fetchAdminData = () => API.get("/users/admin-data");
-export const travelstyleupdate = (newInput) => API.put("/users/travel", newInput);
 
+//travelstyle
 export const updateProfile = (updatedProfile) => API.put("/users/profile", updatedProfile);
+export const fetchProfile = () => API.get("/users/profile");
 
+//profile
+// export const travelUpdate = (updatedProfile) => API.put("/users/profile", updatedProfile);
+// export const travelProfile = () => API.get("/users/profile");
 export default API;

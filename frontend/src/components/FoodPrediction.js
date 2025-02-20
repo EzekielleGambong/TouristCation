@@ -13,7 +13,7 @@ const FoodPrediction = () => {
   const [prediction, setPrediction] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState("ss");
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserInput((prev) => ({ ...prev, [name]: value }));
@@ -27,7 +27,10 @@ const FoodPrediction = () => {
 
     try {
       await updateProfile(profile);
+      console.log("Sending request with data:", userInput);
       const response = await axios.post("http://localhost:5000/predict_food", userInput);
+      console.log("Received response:", response.data);
+      
       setPrediction(response.data.predicted_category);
     } catch (error) {
       console.error("Error making prediction:", error);
