@@ -38,12 +38,14 @@ function Signup() {
 
   return (
     <motion.div
-      className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-100 to-indigo-300"
+      className="min-h-screen flex items-center justify-center"
+      style={{ backgroundColor: "#D1FFBD" }}
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.5 }}
     >
+
       <div className="w-full max-w-md bg-white shadow-lg rounded-2xl p-8">
         <div className="flex flex-col items-center mb-6">
           <img src={logo} alt="Logo" className="w-40 h-20 mb-2" />

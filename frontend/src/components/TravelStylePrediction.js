@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { fetchProfile, updateProfile } from "../services/api";
 import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 const TravelStylePrediction = () => {
   const [newInput, setNewInput] = useState({
     typeOfAttractions: "",
     category: "",
   });
+  const navigate = useNavigate();
 
   const [travelStylePrediction, setTravelStylePrediction] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -14,7 +15,6 @@ const TravelStylePrediction = () => {
 
   const [profile, setProfile] = useState(null);
 
-  // Handle Input Changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewInput((prev) => ({ ...prev, [name]: value }));
@@ -28,39 +28,38 @@ const TravelStylePrediction = () => {
     setError("");
 
     try {
-      await updateProfile(profile); // This should handle MongoDB insertion
-      
+        // Ensure latest profile is fetched before updating
+        const { data } = await fetchProfile();
+        let updatedProfile = { 
+            ...data, 
+            travelStylePrediction: travelStylePrediction 
+        };
 
-      console.log("Sending request with data:", newInput);
+        // Update profile in MongoDB
+        await updateProfile(updatedProfile);
 
-      const response = await axios.post("http://localhost:5000/predict", [
-        newInput,
-      ]);
+        console.log("Sending request with data:", newInput);
+        const response = await axios.post("http://localhost:5000/predict", [newInput]);
 
-      console.log("Received response:", response.data);
+        console.log("Received response:", response.data);
 
-      // Store the predicted travel style
-    const predictedStyle = response.data.predictions[0];
+        // Store and update the travel style
+        const predictedStyle = response.data.predictions[0];
+        setTravelStylePrediction(predictedStyle);
 
-    // Update state immediately
-    setTravelStylePrediction(predictedStyle);
+        // Update profile with the new prediction
+        updatedProfile = { ...updatedProfile, travelStylePrediction: predictedStyle };
+        await updateProfile(updatedProfile);
+        navigate(data.role === "admin" ? "/admin" : "/page/home");
 
-    // Ensure profile is updated correctly before sending to MongoDB
-    const updatedProfile = { 
-      ...profile, 
-      travelStylePrediction: predictedStyle // Store the predicted style
-    };
-    // Update profile in MongoDB
-    await updateProfile(updatedProfile);
-
-    
     } catch (error) {
-      console.error("Error making prediction:", error);
-      setError("Failed to make prediction. Please try again.");
+        console.error("Error making prediction:", error);
+        setError("Failed to make prediction. Please try again.");
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+};
+
 
   // Fetch Profile on Mount
   useEffect(() => {
