@@ -28,12 +28,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const mongoDBURL = process.env.mongoDBURL;
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-app.use('/accommodation', accRoute);
-app.use('/touristspots', spotsRoute);
-app.use('/users', userRoutes);
-app.use('/savedLocations', savedLocationRoutes);
-app.get('/', (request, response) => {
+app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
+app.use('/api/accommodation', accRoute);
+app.use('/api/touristspots', spotsRoute);
+app.use('/api/users', userRoutes);
+app.use('/api/savedLocations', savedLocationRoutes);
+app.get('/api/', (request, response) => {
     console.log(request);
     return response.status(234).send('Success');
   });
