@@ -27,7 +27,14 @@ export const fetchAdminData = () => API.get("/users/admin-data");
 export const updateProfile = (updatedProfile) => API.put("/users/profile", updatedProfile);
 export const fetchProfile = () => API.get("/users/profile");
 
-//profile
-// export const travelUpdate = (updatedProfile) => API.put("/users/profile", updatedProfile);
-// export const travelProfile = () => API.get("/users/profile");
+export const updatesProfile = async (updatedData) => {
+  try {
+      const response = await API.put("/users/profile", updatedData);
+      return response.data;
+  } catch (error) {
+      console.error("Error updating profile:", error);
+      throw error;
+  }
+};
+
 export default API;

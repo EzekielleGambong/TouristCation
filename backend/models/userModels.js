@@ -18,8 +18,8 @@ const userSchema = mongoose.Schema({
   travelStylePrediction: { type: String, required: false },
   average_price_range: { type: Number, required: false },
   ambiance: { type: String, required: false },
-  popularity: { type: Number, required: false },
-  foodPrediction: { type: Number, required: false },
+  popularity: { type: String, required: false },
+  foodPrediction: { type: String, required: false },
   storeTypePreference: { type: String, required: false },
   country: { type: String, required: false },
 }, { timestamps: true });

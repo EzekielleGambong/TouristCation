@@ -30,7 +30,7 @@
       req.user = decoded;
 
       // Check if user is inactive
-      if (userActivity.has(decoded.id) && Date.now() - userActivity.get(decoded.id) > 120000) { // 1 minute inactivity
+      if (userActivity.has(decoded.id) && Date.now() - userActivity.get(decoded.id) > 3600000) { // 1 minute inactivity
         return res.status(403).json({ message: 'Session locked due to inactivity' });
       }
 
@@ -185,23 +185,33 @@
   // Update user profile (Now protected with authenticateJWT)
   router.put("/profile", authenticateJWT, async (req, res) => {
     try {
-      const userId = req.user.id; // Extract user ID from token
+        console.log("Updating profile for user:", req.user.id);
+        console.log("Request body:", req.body);
 
-      const updatedUser = await User.findByIdAndUpdate(
-        userId, // Find user by ID
-        req.body, // Update with new data
-        { new: true, select: "-password" } // Exclude password from response
-      );
+        const userId = req.user.id;
+        const updateData = {
+          ...req.body,
+          average_price_range: Number(req.body.average_price_range) // Convert to number
+      };
 
-      if (!updatedUser) {
-        return res.status(404).json({ message: "User not found" });
-      }
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            updateData,
+            { new: true, select: "-password" }
+        );
 
-      res.json(updatedUser);
+        if (!updatedUser) {
+            console.log("User not found:", userId);
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        console.log("Profile updated successfully:", updatedUser);
+        res.json(updatedUser);
     } catch (error) {
-      res.status(500).json({ message: "Error updating profile", error });
+        console.error("Error updating profile:", error);
+        res.status(500).json({ message: "Error updating profile", error: error.message });
     }
-  });
+});
 
 // Predict Travel Style and Update Profile
 router.put("/travel", authenticateJWT, async (req, res) => {

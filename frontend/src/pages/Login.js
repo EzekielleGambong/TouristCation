@@ -20,8 +20,9 @@ function Login() {
 
       // Check if required fields are missing
       if (!data.user.travelStylePrediction || data.user.travelStylePrediction === "" 
+          ||
+          !data.user.averagePricePreference || data.user.averagePricePreference === 0 
           // ||
-          // !data.user.averagePricePreference || data.user.averagePricePreference === 0 ||
           // !data.user.averagePriceShopPreference || data.user.averagePriceShopPreference === 0
           ){
         setShowPredictions(true); // Show modal if fields are missing

@@ -18,7 +18,6 @@ const TravelStylePrediction = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewInput((prev) => ({ ...prev, [name]: value }));
-    setProfile((prev) => ({ ...prev, [name]: value }));
   };
 
   // Handle Form Submission
@@ -31,15 +30,17 @@ const TravelStylePrediction = () => {
         // Ensure latest profile is fetched before updating
         const { data } = await fetchProfile();
         let updatedProfile = { 
-            ...data, 
-            travelStylePrediction: travelStylePrediction 
-        };
+          ...data, 
+          travelStylePrediction: travelStylePrediction,
+          typeOfAttractions: newInput.typeOfAttractions,
+          category: newInput.category
+      };
 
         // Update profile in MongoDB
         await updateProfile(updatedProfile);
 
         console.log("Sending request with data:", newInput);
-        const response = await axios.post("http://localhost:5000/predict", [newInput]);
+        const response = await axios.post("https://backendalgo-ac230233e942.herokuapp.com/predict", [newInput]);
 
         console.log("Received response:", response.data);
 
@@ -50,7 +51,7 @@ const TravelStylePrediction = () => {
         // Update profile with the new prediction
         updatedProfile = { ...updatedProfile, travelStylePrediction: predictedStyle };
         await updateProfile(updatedProfile);
-        navigate(data.role === "admin" ? "/admin" : "/page/home");
+        // navigate(data.role === "admin" ? "/admin" : "/page/home");
 
     } catch (error) {
         console.error("Error making prediction:", error);
