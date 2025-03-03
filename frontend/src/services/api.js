@@ -1,11 +1,11 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:8080" });
+const API = axios.create({ baseURL: "http://localhost:8080/api" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   console.log("Token in interceptor:", token);
-  if (token && !req.url.includes("/api/users/signup") && !req.url.includes("/api/users/login")) {
+  if (token && !req.url.includes("/users/signup") && !req.url.includes("/users/login")) {
     req.headers.Authorization = `Bearer ${token}`;
   }
   console.log("Request headers:", req.headers);
