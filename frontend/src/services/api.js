@@ -19,13 +19,6 @@ export const uploadImage = (formData) =>
       "Content-Type": "multipart/form-data",
     },
   });
-<<<<<<< HEAD
-export const loginUser = (formData) => API.post("/api/users/login", formData);
-export const signupUser = (formData) => API.post("/api/users/signup", formData);
-export const fetchProfile = () => API.get("/api/users/profile");
-export const fetchAdminData = () => API.get("/api/users/admin-data");
-export const updateProfile = (updatedProfile) => API.put("/api/users/profile", updatedProfile);
-=======
 export const loginUser = (formData) => API.post("/users/login", formData);
 export const signupUser = (formData) => API.post("/users/signup", formData);
 export const fetchAdminData = () => API.get("/users/admin-data");
@@ -43,6 +36,5 @@ export const updatesProfile = async (updatedData) => {
       throw error;
   }
 };
->>>>>>> origin/Feb.16
 
 export default API;

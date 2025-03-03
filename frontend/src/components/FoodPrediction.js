@@ -68,7 +68,7 @@ const FoodPrediction = () => {
 
     // Update the state with the prediction
     setFoodPrediction(prediction);  // Set food prediction for display
-    navigate(data.role === "admin" ? "/admin" : "/page/home");
+    navigate(profile.role === "admin" ? "/admin" : "/page/home");
 
   } catch (error) {
       console.error("Error updating profile:", error);
