@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { fetchAdminData } from "../services/api";
+import { fetchAdminData, fetchTotalUsers, fetchTotalTourist, fetchTotalAccommodations } from "../services/api"; 
+import { addTouristSpot, addAccomodation  } from "../services/api"; 
 import axios from "axios";
 import { Bar, Pie } from "react-chartjs-2";
 import "chart.js/auto";
+import Adminform from "./adminform";
 
 function AdminDashboard() {
   const [adminData, setAdminData] = useState({
@@ -11,7 +13,8 @@ function AdminDashboard() {
     totalUsers: 0,
     totalProvinces: 0,
     totalAccommodations: 0,
-    totalTouristSpots: 0,
+    totalTourist: 0,
+    
   });
 
   const [formData, setFormData] = useState({
@@ -32,16 +35,59 @@ function AdminDashboard() {
     province: "",
     link: "",
   });
+  const [accommodationData, setAccommodationData] = useState({
+    establishmentId: "",
+    nameOfEstablishment: "",
+    province: "",
+    city: "",
+    address: "",
+    aeStatus: "",
+    aeType: "",
+    mainType: "",
+    subCategory: "",
+    contactNumber: "",
+    emailAddress: "",
+    facebookPage: "",
+    room: "",
+    pax: "",
+    price: "",
+    booking: "",
+    agoda: "",
+    googleTravel: "",
+    coordinates: "",
+    description: "",
+    link: "",
+    type: "",
+  });
 
   useEffect(() => {
     const loadAdminData = async () => {
       try {
         const { data } = await fetchAdminData();
-        setAdminData(data);
+        setAdminData(prevData => ({
+          ...prevData,
+          ...data,
+          totalProvinces: 10 // Fixed value
+        }));
       } catch (err) {
         console.error("Error fetching admin data:", err);
       }
     };
+    
+    const loadTotalCount = async () => {
+      try {
+        const [{ totalTourist }, { totalUsers }, { totalAccommodations }] = await Promise.all([
+          fetchTotalTourist(),
+          fetchTotalUsers(),
+          fetchTotalAccommodations(),
+        ]);
+    
+        setAdminData(prevData => ({ ...prevData, totalTourist, totalUsers, totalAccommodations }));
+      } catch (err) {
+        console.error("Error fetching total data:", err);
+      }
+    };
+    loadTotalCount();
     loadAdminData();
   }, []);
 
@@ -58,11 +104,17 @@ function AdminDashboard() {
       [name]: value,
     });
   };
-
+  const handleAccoChange = (e) => {
+    const { name, value } = e.target;
+    setAccommodationData({
+      ...formData,
+      [name]: value,
+    });
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:8080/touristspots/add", formData);
+      const response = await addTouristSpot(formData);
       alert("Attraction added successfully!");
       setFormData({
         lgu: "",
@@ -88,27 +140,58 @@ function AdminDashboard() {
     }
   };
 
+  const handleAccommodationSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await addAccomodation(accommodationData);
+      alert("Accommodatio added successfully!");
+      setAccommodationData({
+        establishmentId: "",
+        nameOfEstablishment: "",
+        province: "",
+        city: "",
+        address: "",
+        aeStatus: "",
+        aeType: "",
+        mainType: "",
+        subCategory: "",
+        contactNumber: "",
+        emailAddress: "",
+        facebookPage: "",
+        room: "",
+        pax: "",
+        price: "",
+        booking: "",
+        agoda: "",
+        googleTravel: "",
+        coordinates: "",
+        description: "",
+        link: "",
+        type: "",
+      });
+    } catch (err) {
+      console.error(err);
+      alert("Failed to add attraction.");
+    }
+  };
+
   const barData = {
-    labels: adminData.accommodationsPerProvince
-      ? Object.keys(adminData.accommodationsPerProvince)
-      : [],
+    labels: ["Total Accommodations", "Total Tourists"],
     datasets: [
       {
         label: "Accommodations",
-        data: adminData.accommodationsPerProvince
-          ? Object.values(adminData.accommodationsPerProvince)
-          : [],
+        data: [adminData.totalAccommodations, 0],
         backgroundColor: "#4caf50",
       },
       {
         label: "Tourist Spots",
-        data: adminData.touristSpotsPerProvince
-          ? Object.values(adminData.touristSpotsPerProvince)
-          : [],
+        data: [0, adminData.totalTourist],
         backgroundColor: "#2196f3",
       },
     ],
   };
+  
+  
 
   const pieData = {
     labels: ["Users", "Accommodations", "Tourist Spots"],
@@ -117,7 +200,7 @@ function AdminDashboard() {
         data: [
           adminData.totalUsers || 0,
           adminData.totalAccommodations || 0,
-          adminData.totalTouristSpots || 0,
+          adminData.totalTourist || 0,
         ],
         backgroundColor: ["#ff5722", "#4caf50", "#2196f3"],
       },
@@ -141,7 +224,7 @@ function AdminDashboard() {
             <p>Total Users: {adminData.totalUsers}</p>
             <p>Total Provinces: {adminData.totalProvinces}</p>
             <p>Total Accommodations: {adminData.totalAccommodations}</p>
-            <p>Total Tourist Spots: {adminData.totalTouristSpots}</p>
+            <p>Total Tourist Spots: {adminData.totalTourist}</p>
           </div>
           <div className="p-4 bg-gray-50 rounded shadow">
             <h2 className="text-lg font-bold text-gray-700 mb-2">Pie Chart</h2>
@@ -298,8 +381,12 @@ function AdminDashboard() {
             Add Attraction
           </button>
         </form>
+
+        <adminform />
       </div>
+      <Adminform />
     </div>
+    
   );
 }
 

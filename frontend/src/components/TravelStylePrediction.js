@@ -51,7 +51,7 @@ const TravelStylePrediction = () => {
         // Update profile with the new prediction
         updatedProfile = { ...updatedProfile, travelStylePrediction: predictedStyle };
         await updateProfile(updatedProfile);
-        navigate(data.role === "admin" ? "/admin" : "/page/home");
+        // navigate(data.role === "admin" ? "/admin" : "/page/home");
 
     } catch (error) {
         console.error("Error making prediction:", error);

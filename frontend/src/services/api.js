@@ -21,20 +21,27 @@ export const uploadImage = (formData) =>
   });
 export const loginUser = (formData) => API.post("/users/login", formData);
 export const signupUser = (formData) => API.post("/users/signup", formData);
-export const fetchAdminData = () => API.get("/users/admin-data");
-
-//travelstyle
-export const updateProfile = (updatedProfile) => API.put("/users/profile", updatedProfile);
 export const fetchProfile = () => API.get("/users/profile");
+export const fetchAdminData = () => API.get("/users/admin-data");
+export const updateProfile = (updatedProfile) => API.put("/users/profile", updatedProfile);
 
-export const updatesProfile = async (updatedData) => {
-  try {
-      const response = await API.put("/users/profile", updatedData);
-      return response.data;
-  } catch (error) {
-      console.error("Error updating profile:", error);
-      throw error;
-  }
+
+export const fetchTotalUsers = async () => {
+  const response = await API.get("/users/total-users");
+  return response.data;
 };
+
+export const fetchTotalTourist = async () => {
+  const response = await API.get("/users/total-tourist");
+  return response.data;
+};
+
+export const fetchTotalAccommodations = async () => {
+  const response = await API.get("/users/total-acco");
+  return response.data;
+};
+
+export const addTouristSpot = (formData) => API.post("/touristspots/add", formData);
+export const addAccomodation = (accommodationData) => API.post("/accommodation/add", accommodationData);
 
 export default API;

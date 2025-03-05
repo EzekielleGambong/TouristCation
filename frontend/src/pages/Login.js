@@ -17,17 +17,21 @@ function Login() {
       const { data } = await loginUser(formData);
       localStorage.setItem("token", data.token);
       localStorage.setItem("role", data.role);
-
-      // Check if required fields are missing
-      if (!data.user.travelStylePrediction || data.user.travelStylePrediction === "" 
-          ||
-          !data.user.averagePricePreference || data.user.averagePricePreference === 0 
-          // ||
-          // !data.user.averagePriceShopPreference || data.user.averagePriceShopPreference === 0
-          ){
-        setShowPredictions(true); // Show modal if fields are missing
-      } else {
-        navigate(data.role === "admin" ? "/admin" : "/page/home");
+      if (data.role === "user") {
+        if (
+          !data.user ||
+          !data.user.travelStylePrediction ||
+          data.user.travelStylePrediction === "" 
+         
+        ) {
+          
+          setShowPredictions(true); // Show modal if user data is incomplete
+        } else {
+          
+          navigate("/page/home"); // Navigate to home if user data is complete
+        }
+      } else if (data.role === "admin") {
+        navigate("/admin"); // Navigate to admin page if role is admin
       }
     } catch (err) {
       setError("Invalid credentials");
