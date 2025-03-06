@@ -36,6 +36,7 @@ app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/accommodation', accRoute);
 app.use('/api/touristspots', spotsRoute);
 app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/savedLocations', savedLocationRoutes);
 app.get('/api/', (request, response) => {
     console.log(request);

@@ -2,7 +2,6 @@ import express from 'express';
 import { Attractioninformation } from '../models/tourists.js';
 const router = express.Router();
 
-
 // router.get('/', async (request, response) => {
 //   try {
 //     const acco = await Attractioninformation.find({});
@@ -52,6 +51,17 @@ router.get('/coordinates', async (req, res) => {
 });
 
 
+// Add a new attraction
+router.post('/add', async (req, res) => {
+  try {
+    const newAttraction = new Attractioninformation(req.body);
+    await newAttraction.save();
+    res.status(201).json({ message: 'Attraction added successfully!' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send({ message: 'Failed to add attraction.' });
+  }
+});
 
 
 export default router;

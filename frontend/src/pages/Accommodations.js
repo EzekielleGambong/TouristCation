@@ -302,7 +302,7 @@ function Accommodations() {
         ...(province && { province }),
       }).toString();
 
-      const response = await fetch(`http://localhost:8080/touristspots?${queryParams}`);
+      const response = await fetch(`https://www.toursitcation.site/api/touristspots?${queryParams}`);
       const data = await response.json();
       console.log("Tourist", queryParams);
       setTouristSpots(data);
@@ -325,7 +325,7 @@ function Accommodations() {
         ...(pax && { pax: Number(pax) }),
       }).toString();
 
-      const response = await fetch(`http://localhost:8080/accommodation?${queryParams}`);
+      const response = await fetch(`https://www.toursitcation.site/api/accommodation?${queryParams}`);
       const data = await response.json();
       console.log("Fetched data:", queryParams);
       setSelectedCity(city === "" ? province : city);

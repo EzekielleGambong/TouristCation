@@ -4,7 +4,7 @@ export default function NavbarPlan() {
   const navigate = useNavigate();
     
       const handlePlan = () => {
-        navigate("page/home");
+        navigate("/page/home");
       };
   return (
     <nav className="absolute top-0 w-full bg-gray-100">

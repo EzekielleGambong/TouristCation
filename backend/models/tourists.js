@@ -66,6 +66,10 @@ const attractionSchema = mongoose.Schema(
       type: String,
       required: false,
     },
+    travelStyle: {
+      type: String,
+      required: false,
+    },
   }
 );
 

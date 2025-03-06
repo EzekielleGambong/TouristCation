@@ -129,4 +129,17 @@ router.delete('/:id', async (request, response) => {
   }
 });
 
+
+// Add a new attraction
+router.post('/add', async (req, res) => {
+  try {
+    const newAccomodation = new Accommodationinformation(req.body);
+    await newAccomodation.save();
+    res.status(201).json({ message: 'Attraction added successfully!' });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).send({ message: 'Failed to add attraction.' });
+  }
+});
+
 export default router;
