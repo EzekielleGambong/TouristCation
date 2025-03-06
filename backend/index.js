@@ -10,15 +10,19 @@ import { fileURLToPath } from "url";
 const app = express();
 
 import cors from 'cors';
-
+const allowedOrigins = [
+    "http://localhost:3000",   // For local development
+    "http://18.136.142.232",
+    "https://www.toursitcation.site"
+];
 app.use(cors({
-    origin: ['http://localhost:3000'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-app.use(express.json());
-// app.use(cors());
+
+app.use(express.json());	
 
 
 import dotenv from 'dotenv';
@@ -43,7 +47,7 @@ mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log('App connected to database');
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`App is listening to port: ${PORT}`);
     });
   })
