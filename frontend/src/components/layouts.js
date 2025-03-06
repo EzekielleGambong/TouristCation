@@ -6,7 +6,7 @@ const Predictions = () => {
     return (
         <div>
             <TravelStylePrediction />
-            <FoodCategoryPrediction />
+            
             <ShopCategorization />
         </div>
     );
