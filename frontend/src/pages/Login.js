@@ -25,13 +25,13 @@ function Login() {
          
         ) {
           
-          setShowPredictions(true); // Show modal if user data is incomplete
+          setShowPredictions(true); 
         } else {
           
-          navigate("/page/home"); // Navigate to home if user data is complete
+          navigate("/page/home"); 
         }
       } else if (data.role === "admin") {
-        navigate("/admin"); // Navigate to admin page if role is admin
+        navigate("/admin"); 
       }
     } catch (err) {
       setError("Invalid credentials");

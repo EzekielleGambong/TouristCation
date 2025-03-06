@@ -47,6 +47,8 @@ const FoodPrediction = () => {
     console.log("Updated Profile Data: ", updatedProfile);
     
     try {
+      const { data } = await fetchProfile();
+    setProfile(data);
     // First, make the prediction request
     const response = await axios.post("https://backendalgo-ac230233e942.herokuapp.com/predict_food", userInput);
     console.log("Received response:", response.data);
