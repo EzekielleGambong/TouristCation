@@ -1,8 +1,9 @@
 import { useStorePlan } from "../hooks/useStore";
-
-import React, { useCallback, useMemo, useState } from "react";
+import { fetchProfile } from "../services/api"; 
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
-
+import Papa from "papaparse";
+import foodDataCSV from "../pages/data.csv";
 import PropTypes from "prop-types";
 
 import CardGrid from "../components/cards/card_grid";
@@ -67,8 +68,29 @@ AccommodationInformation.propTypes = {
 };
 
 export default function ItineraryReview() {
-  const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots } = useStorePlan((state) => state);
+  const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots = [], food = [] } = useStorePlan((state) => state);
 
+
+  const [travelStyle, setTravelStyle] = useState("");
+
+  // Extract coordinates from tourist spots
+  const points = useMemo(() => {
+    return (touristSpots || []).map((spot) => {
+      const [lat, lng] = spot.locationCoordinates.split(",").map(Number);
+      return { lat, lng };
+    });
+  }, [touristSpots]);
+  
+
+  // Compute map center as the average of all selected points
+  const center = useMemo(() => {
+    if (points.length === 0) return { lat: 16.326855, lng: 120.3625725 };
+
+    const avgLat = points.reduce((sum, p) => sum + p.lat, 0) / points.length;
+    const avgLng = points.reduce((sum, p) => sum + p.lng, 0) / points.length;
+
+    return { lat: avgLat, lng: avgLng };
+  }, [points]);
   const accommodationInfo = [
     {
       type: "date",
@@ -115,34 +137,59 @@ export default function ItineraryReview() {
   );
 
   const { isLoaded, loadError } = useJsApiLoader(options);
-
   const [map, setMap] = useState(null);
 
   const onLoad = useCallback((map) => {
-    const bounds = new window.google.maps.LatLngBounds(center);
+    const bounds = new window.google.maps.LatLngBounds();
+    points.forEach((point) => bounds.extend(point));
     map.fitBounds(bounds);
     setMap(map);
-  }, []);
+  }, [points]);
 
   const onUnmount = useCallback(() => {
     setMap(null);
   }, []);
+  const [foodList, setFoodList] = useState([]);
 
+  useEffect(() => {
+  const parseCSV = async () => {
+    const response = await fetch(foodDataCSV);
+    const text = await response.text();
+
+    Papa.parse(text, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (result) {
+        const uniqueFood = [...new Map(result.data.map(item => [item["name_of_restaurant"], item])).values()];
+        setFoodList(uniqueFood);
+      },
+    });
+  };
+  parseCSV();
+}, []);
+useEffect(() => {
+  console.log("🔍 Updated Food List:", foodList);
+}, [foodList]);  // ✅ This will trigger whenever foodList updates
+
+
+
+  
   if (loadError) return <div>Error loading Google Maps API</div>;
+
   return (
     <div className="w-full flex flex-col ~space-y-6/8">
       <section className="map-section">
         {isLoaded ? (
-          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={zoom} onLoad={onLoad} onUnmount={onUnmount}>
-            {points.map((point, i) => (
-              <MarkerF key={i} position={point} />
-            ))}
+          <GoogleMap mapContainerStyle={{ width: "100%", height: "400px" }} center={center} zoom={12} onLoad={onLoad} onUnmount={onUnmount}>
+            {(points || []).map((point, i) => (
+  <MarkerF key={i} position={point} />
+))}
+
           </GoogleMap>
         ) : (
           <div>Loading Map...</div>
         )}
       </section>
-
       <section className="flex flex-col ~space-y-1/2">
         <p className="w-full font-bold ~text-2xl/4xl text-sky-500">{province}</p>
 
@@ -164,24 +211,34 @@ export default function ItineraryReview() {
           ))}
         </div>
       </section>
-
-      <section className="flex flex-col gap-4">
-        <div className="flex flex-row items-center space-x-2">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="w-8 fill-black">
-            <path
-              xmlns="http://www.w3.org/2000/svg"
-              d="M480-480q33 0 56.5-23.5T560-560q0-33-23.5-56.5T480-640q-33 0-56.5 23.5T400-560q0 33 23.5 56.5T480-480Zm0 400Q319-217 239.5-334.5T160-552q0-150 96.5-239T480-880q127 0 223.5 89T800-552q0 100-79.5 217.5T480-80Z"
-            />
-          </svg>
-          <p className="font-bold ~text-xl/3xl">Tourist Spots</p>
-        </div>
-
-        <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-4">
-          {touristSpots.map((settings, index) => (
-            <CardGrid key={index} settings={settings} />
+      {/* Display selected tourist spots */}
+      <section>
+        <h2 className="text-xl font-bold">Selected Tourist Spots</h2>
+        <ul>
+          {(touristSpots || []).map((spot, index) => (
+            <li key={index} className="p-2 bg-white rounded-lg shadow mt-2">
+              <h3 className="font-bold">{spot.nameOfAttractions}</h3>
+              <p>{spot.description}</p>
+            </li>
           ))}
-        </div>
+        </ul>
+
       </section>
+
+      <section>
+        <h2 className="text-xl font-bold">Selected Tourist Spots</h2>
+        <ul>
+          {(food || []).map((foodItem, index) => (
+            <li key={index} className="p-2 bg-white rounded-lg shadow mt-2">
+              <h3 className="font-bold">{foodItem.nameOfAttractions}</h3>
+              <p>{foodItem.description}</p>
+            </li>
+          ))}
+        </ul>
+
+      </section>
+
     </div>
   );
 }
+

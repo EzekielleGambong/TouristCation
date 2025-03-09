@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://www.toursitcation.site" });
+const API = axios.create({ baseURL: "http://localhost:8080" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
@@ -43,5 +43,13 @@ export const fetchTotalAccommodations = async () => {
 
 export const addTouristSpot = (formData) => API.post("/api/touristspots/add", formData);
 export const addAccomodation = (accommodationData) => API.post("/api/accommodation/add", accommodationData);
+
+
+
+export const fetchAttractionsByTravelStyle = (travelStyle) =>
+  API.get(`/api/touristspots/filtered?travelStyle=${encodeURIComponent(travelStyle)}`);
+
+export const fetchFilteredFood = (category) =>
+  API.get(`/api/food/filtered?category=${encodeURIComponent(category)}`);
 
 export default API;
