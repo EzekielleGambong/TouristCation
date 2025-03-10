@@ -13,21 +13,22 @@ import cors from 'cors';
 const allowedOrigins = [
     "http://localhost:3000",   // For local development
     "http://18.136.142.232",
-    "https://www.toursitcation.site"
+    "https://www.toursitcation.site",
+    "https://toursitcation.site"
 ];
 app.use(cors({
     origin: allowedOrigins,
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-
-app.use(express.json());	
+	
+app.options('*', cors());  // Handle preflight request for all routes
+app.use(express.json());
 
 
 import dotenv from 'dotenv';
 dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
@@ -35,7 +36,6 @@ const mongoDBURL = process.env.mongoDBURL;
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/accommodation', accRoute);
 app.use('/api/touristspots', spotsRoute);
-app.use('/api/users', userRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/savedLocations', savedLocationRoutes);
 app.get('/api/', (request, response) => {
