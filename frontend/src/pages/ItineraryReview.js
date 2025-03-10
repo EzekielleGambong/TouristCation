@@ -202,8 +202,8 @@ useEffect(() => {
         {isLoaded ? (
           <GoogleMap mapContainerStyle={{ width: "100%", height: "400px" }} center={center} zoom={12} onLoad={onLoad} onUnmount={onUnmount}>
             {(points || []).map((point, i) => (
-  <MarkerF key={i} position={point} />
-))}
+          <MarkerF key={i} position={point} />
+        ))}
 
           </GoogleMap>
         ) : (
@@ -231,6 +231,7 @@ useEffect(() => {
           ))}
         </div>
       </section>
+
       {/* Display selected tourist spots */}
       <section>
         <h2 className="text-xl font-bold">Selected Tourist Spots</h2>
@@ -258,62 +259,62 @@ useEffect(() => {
       </section>
 
       <section className="shop-map-section">
-  <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Locations</h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Locations</h2>
 
-  {/* Google Map Section */}
-  {isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={{ width: "100%", height: "400px", borderRadius: "8px" }}
-      center={shopCenter}
-      zoom={12}
-    >
-      {(shopPoints || []).map((point, i) => (
-        <MarkerF key={i} position={point} />
-      ))}
-    </GoogleMap>
-  ) : (
-    <div className="text-gray-500 text-center">Loading Shop Map...</div>
-  )}
+        {/* Google Map Section */}
+        {isLoaded ? (
+          <GoogleMap
+            mapContainerStyle={{ width: "100%", height: "400px", borderRadius: "8px" }}
+            center={shopCenter}
+            zoom={12}
+          >
+            {(shopPoints || []).map((point, i) => (
+              <MarkerF key={i} position={point} />
+            ))}
+          </GoogleMap>
+        ) : (
+          <div className="text-gray-500 text-center">Loading Shop Map...</div>
+        )}
 
-  {/* Shop Details Section */}
-  <section className="mt-6">
-    <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Details</h2>
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      {shopList.map((shop, index) => (
-        <div 
-          key={index} 
-          className="p-4 bg-white rounded-lg shadow-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition"
-          onClick={() => setSelectedShop(shop)}
-        >
-          <h3 className="text-lg font-semibold text-gray-900">{shop.name_of_restaurant}</h3>
-        </div>
-      ))}
-      
-      {/* Collapsible Drawer */}
-      {selectedShop && (
-        <div 
-          id="drawer-bg" 
-          className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
-          onClick={handleOutsideClick}
-        >
-          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/2 max-h-[80vh] overflow-y-auto animate-fadeIn">
-            <h3 className="text-xl font-bold">{selectedShop.name}</h3>
-            <p className="mt-2">{selectedShop.description}</p>
-            <p className="text-gray-500 mt-2 text-sm">
-              <strong>Coordinates:</strong> {selectedShop.coordination}
-            </p>
-            <button 
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" 
-              onClick={() => setSelectedShop(null)}
-            >
-              Close
-            </button>
+        {/* Shop Details Section */}
+        <section className="mt-6">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {shopList.map((shop, index) => (
+              <div 
+                key={index} 
+                className="p-4 bg-white rounded-lg shadow-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition"
+                onClick={() => setSelectedShop(shop)}
+              >
+                <h3 className="text-lg font-semibold text-gray-900">{shop.name_of_restaurant}</h3>
+              </div>
+            ))}
+            
+            {/* Collapsible Drawer */}
+            {selectedShop && (
+              <div 
+                id="drawer-bg" 
+                className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
+                onClick={handleOutsideClick}
+              >
+                <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/2 max-h-[80vh] overflow-y-auto animate-fadeIn">
+                  <h3 className="text-xl font-bold">{selectedShop.name}</h3>
+                  <p className="mt-2">{selectedShop.description}</p>
+                  <p className="text-gray-500 mt-2 text-sm">
+                    <strong>Coordinates:</strong> {selectedShop.coordination}
+                  </p>
+                  <button 
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" 
+                    onClick={() => setSelectedShop(null)}
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
-  </section>
-</section>
+        </section>
+      </section>
 
 
     </div>

@@ -7,7 +7,7 @@ const Predictions = () => {
         <div>
             <TravelStylePrediction />
             
-            <ShopCategorization />
+            {/* <ShopCategorization /> */}
         </div>
     );
 };
