@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import accRoute from "./routes/accommodationRoute.js"
 import spotsRoute from "./routes/touristspotsRoute.js"
 import userRoutes from './routes/userRoute.js';
+import foodRoutes from './routes/foodRoute.js';
 import savedLocationRoutes from './routes/savedLocationRoute.js';
 import path from "path";
 import { fileURLToPath } from "url";
@@ -22,7 +23,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
-	
+
 app.options('*', cors());  // Handle preflight request for all routes
 app.use(express.json());
 
@@ -37,6 +38,8 @@ app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/accommodation', accRoute);
 app.use('/api/touristspots', spotsRoute);
 app.use('/api/users', userRoutes);
+app.use('/api/food', foodRoutes);
+
 app.use('/api/savedLocations', savedLocationRoutes);
 app.get('/api/', (request, response) => {
     console.log(request);

@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import landingimg from '../images/1.png';
 import aboutimg from '../images/2.png';
-import MLPredictButton from '../components/MLPredictButton';
+
 
 export default function Home() {
   const navigate = useNavigate();
@@ -31,7 +31,7 @@ export default function Home() {
 
           {/* BOTTOM RIGHT */}
           <button className="absolute right-6 bottom-9 flex justify-center items-center rounded-full transition-all bg-sky-500 hover:bg-sky-700 ~py-2/4 ~px-4/6 gap-2" onClick={handlePlan}>
-            <span className="~text-sm/lg font-bold text-white">Plan your budget</span>
+            <span className="~text-sm/lg font-bold text-white">Plan your travel</span>
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" className="~w-[0.875rem]/[1.125rem] fill-white">
               <path xmlns="http://www.w3.org/2000/svg" d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z" />
             </svg>
@@ -73,7 +73,7 @@ export default function Home() {
         </div>
       </section>
 
-      <MLPredictButton />
+     
     </>
   );
 }

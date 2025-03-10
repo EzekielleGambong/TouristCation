@@ -35,16 +35,16 @@ const FoodPrediction = () => {
     }
 
     // Make sure to include the foodPrediction here in the updated profile
-    const updatedProfile = {
-      ...profile,  // Use the fetched profile data
-      ambiance: userInput.ambiance,
-      popularity: userInput.popularity,
-      average_price_range: Number(userInput.average_price_range),
-      foodPrediction: foodPrediction,  // Add foodPrediction to the updated profile
-    };
+    // const updatedProfile = {
+    //   ...profile,  // Use the fetched profile data
+    //   ambiance: userInput.ambiance,
+    //   popularity: userInput.popularity,
+    //   average_price_range: Number(userInput.average_price_range),
+    //   foodPrediction: foodPrediction,  // Add foodPrediction to the updated profile
+    // };
 
     // Log the updated profile to check the structure
-    console.log("Updated Profile Data: ", updatedProfile);
+    
     
     try {
       const { data } = await fetchProfile();

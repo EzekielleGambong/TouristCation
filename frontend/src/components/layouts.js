@@ -6,8 +6,8 @@ const Predictions = () => {
     return (
         <div>
             <TravelStylePrediction />
-            <FoodCategoryPrediction />
-            <ShopCategorization />
+            
+            {/* <ShopCategorization /> */}
         </div>
     );
 };

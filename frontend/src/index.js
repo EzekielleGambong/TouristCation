@@ -23,7 +23,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Profile from "./pages/Profile";
 import AdminDashboard from "./pages/AdminDashboard";
-import Predictions from "./components//layouts";
+import Predictions from "./components/layouts";
+import NextPred from "./components/FoodPrediction";
 
 
 // # ~ ~ ~ ~ ~ # INACTIVITY CONTEXT # ~ ~ ~ ~ ~ # //
@@ -78,6 +79,7 @@ export default function TouristCation() {
         </Route>
 
         {/* Auth and Profile Routes */}
+        <Route path="/nextpred" element={<NextPred />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/draft" element={<Predictions />} />

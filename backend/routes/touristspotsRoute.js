@@ -1,5 +1,6 @@
 import express from 'express';
 import { Attractioninformation } from '../models/tourists.js';
+
 const router = express.Router();
 
 // router.get('/', async (request, response) => {
@@ -12,6 +13,31 @@ const router = express.Router();
 //     response.status(500).send({ message: error.message });
 //   }
 // });
+router.get('/filtered', async (req, res) => {
+  console.log("✅ Route /api/food/filtered reached"); // Add this log
+
+  try {
+    const { travelStyle } = req.query;
+
+    if (!travelStyle) {
+      return res.status(400).json({ message: "Travel style is required" });
+    }
+
+    // Use Attractioninformation instead of TouristSpot
+    const attractions = await Attractioninformation.find({ travelStyle: travelStyle });
+
+    if (!attractions.length) {
+      return res.status(404).json({ message: "No attractions found for this travel style" });
+    }
+
+    return res.status(200).json(attractions);
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: 'Failed to fetch attractions' });
+  }
+});
+
+
 
 router.get('/', async (request, response) => {
   try {
