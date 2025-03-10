@@ -5,38 +5,7 @@ import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import Papa from "papaparse";
 import foodDataCSV from "../pages/data.csv";
 import PropTypes from "prop-types";
-
-import CardGrid from "../components/cards/card_grid";
-
-const containerStyle = {
-  width: "100%",
-  height: "400px",
-};
-
-const center = {
-  lat: 16.326855,
-  lng: 120.3625725,
-};
-const zoom = 12;
-const points = [
-  {
-    lat: 16.30637,
-    lng: 120.37398,
-  },
-  {
-    lat: 16.35344,
-    lng: 120.34065,
-  },
-  {
-    lat: 16.32242,
-    lng: 120.36701,
-  },
-  {
-    lat: 16.32319,
-    lng: 120.36665,
-  },
-];
-
+import shopDataCSV from "../pages/shops.csv"; 
 function formatDate(data) {
   return new Date(data).toLocaleDateString("en-US", {
     year: "numeric",
@@ -64,13 +33,21 @@ AccommodationInformation.propTypes = {
     type: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     data: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
+    icon: PropTypes.node.isRequired,
   }).isRequired,
 };
 
 export default function ItineraryReview() {
   const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots = [], food = [] } = useStorePlan((state) => state);
 
+  const [selectedShop, setSelectedShop] = useState(null);
 
+  // Close when clicking outside
+  const handleOutsideClick = (e) => {
+    if (e.target.id === "drawer-bg") {
+      setSelectedShop(null);
+    }
+  };
   const [travelStyle, setTravelStyle] = useState("");
 
   // Extract coordinates from tourist spots
@@ -150,13 +127,20 @@ export default function ItineraryReview() {
     setMap(null);
   }, []);
   const [foodList, setFoodList] = useState([]);
+  const [shopList, setShopList] = useState([]);
 
   useEffect(() => {
-  const parseCSV = async () => {
-    const response = await fetch(foodDataCSV);
-    const text = await response.text();
+  const parseCSVFiles = async () => {
+    // Fetch and parse food CSV
+    const fetchFoodCSV = fetch(foodDataCSV).then((response) => response.text());
+    // Fetch and parse shop CSV
+    const fetchShopCSV = fetch(shopDataCSV).then((response) => response.text());
 
-    Papa.parse(text, {
+    // Wait for both fetches to complete
+    const [foodText, shopText] = await Promise.all([fetchFoodCSV, fetchShopCSV]);
+
+    // Parse Food CSV
+    Papa.parse(foodText, {
       header: true,
       skipEmptyLines: true,
       complete: function (result) {
@@ -164,14 +148,50 @@ export default function ItineraryReview() {
         setFoodList(uniqueFood);
       },
     });
+
+    // Parse Shop CSV
+    Papa.parse(shopText, {
+      header: true,
+      skipEmptyLines: true,
+      complete: function (result) {
+        const uniqueShops = [...new Map(result.data.map(item => [item["name_of_restaurant"], item])).values()];
+        setShopList(uniqueShops);
+      },
+    });
   };
-  parseCSV();
+
+  parseCSVFiles();
 }, []);
+
+
+const shopPoints = useMemo(() => {
+  return (shopList || [])
+    .filter(shop => shop.coordination) // Might need to be shop.coordinates
+    .map(shop => {
+      const [lat, lng] = shop.coordination.split(",").map(Number);
+      return { lat, lng };
+    });
+}, [shopList]);
+
+
+const shopCenter = useMemo(() => {
+  if (shopPoints.length === 0) return { lat: 16.326855, lng: 120.3625725 };
+
+  const avgLat = shopPoints.reduce((sum, p) => sum + p.lat, 0) / shopPoints.length;
+  const avgLng = shopPoints.reduce((sum, p) => sum + p.lng, 0) / shopPoints.length;
+
+  return { lat: avgLat, lng: avgLng };
+}, [shopPoints]);
+
+
 useEffect(() => {
   console.log("🔍 Updated Food List:", foodList);
 }, [foodList]);  // ✅ This will trigger whenever foodList updates
 
 
+useEffect(() => {
+  console.log("📍 Shop Points:", shopPoints);
+}, [shopPoints]);
 
   
   if (loadError) return <div>Error loading Google Maps API</div>;
@@ -235,8 +255,66 @@ useEffect(() => {
             </li>
           ))}
         </ul>
-
       </section>
+
+      <section className="shop-map-section">
+  <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Locations</h2>
+
+  {/* Google Map Section */}
+  {isLoaded ? (
+    <GoogleMap
+      mapContainerStyle={{ width: "100%", height: "400px", borderRadius: "8px" }}
+      center={shopCenter}
+      zoom={12}
+    >
+      {(shopPoints || []).map((point, i) => (
+        <MarkerF key={i} position={point} />
+      ))}
+    </GoogleMap>
+  ) : (
+    <div className="text-gray-500 text-center">Loading Shop Map...</div>
+  )}
+
+  {/* Shop Details Section */}
+  <section className="mt-6">
+    <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Details</h2>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {shopList.map((shop, index) => (
+        <div 
+          key={index} 
+          className="p-4 bg-white rounded-lg shadow-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition"
+          onClick={() => setSelectedShop(shop)}
+        >
+          <h3 className="text-lg font-semibold text-gray-900">{shop.name_of_restaurant}</h3>
+        </div>
+      ))}
+      
+      {/* Collapsible Drawer */}
+      {selectedShop && (
+        <div 
+          id="drawer-bg" 
+          className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
+          onClick={handleOutsideClick}
+        >
+          <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/2 max-h-[80vh] overflow-y-auto animate-fadeIn">
+            <h3 className="text-xl font-bold">{selectedShop.name}</h3>
+            <p className="mt-2">{selectedShop.description}</p>
+            <p className="text-gray-500 mt-2 text-sm">
+              <strong>Coordinates:</strong> {selectedShop.coordination}
+            </p>
+            <button 
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" 
+              onClick={() => setSelectedShop(null)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  </section>
+</section>
+
 
     </div>
   );

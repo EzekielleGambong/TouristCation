@@ -195,7 +195,7 @@ function Plan() {
         />
       </label>
 
-      <label className="flex flex-col space-y-1">
+      {/* <label className="flex flex-col space-y-1">
         <span className="font-bold ~text-xs/base">Budget Cap for Tourist Spot</span>
         <input
           type="text"
@@ -209,7 +209,7 @@ function Plan() {
           placeholder="Set your budget cap..."
           required
         />
-      </label>
+      </label> */}
 
       <button type="submit" className="rounded-xl transition-all bg-sky-500 hover:bg-sky-700 uppercase ~text-xs/base font-bold text-white ~py-2/4">
         Set Accommodation
