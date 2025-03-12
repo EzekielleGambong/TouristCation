@@ -40,7 +40,7 @@ app.use('/api/accommodation', accRoute);
 app.use('/api/touristspots', spotsRoute);
 app.use('/api/users', userRoutes);
 app.use('/api/food', foodRoutes);
-// app.use('/api/itineraries', itineraryRoutes);
+app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/savedLocations', savedLocationRoutes);
 app.get('/api/', (request, response) => {
     console.log(request);

@@ -39,6 +39,9 @@ AccommodationInformation.propTypes = {
 };
 
 export default function ItineraryReview() {
+  const [showModal, setShowModal] = useState(false);
+const [itineraryTitle, setItineraryTitle] = useState("");
+
   const navigate = useNavigate();
   const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots = [], food = [] } = useStorePlan((state) => state);
   const [userId, setUserId] = useState(null);
@@ -233,6 +236,7 @@ const saveItinerary = async () => {
     
   const itineraryData = {
     userId,
+    title: itineraryTitle,
     province,
     accommodation,
     stayPeriodFrom,
@@ -252,6 +256,7 @@ const saveItinerary = async () => {
     saveItineraryAPI(itineraryData);
     navigate("/page/home");
     alert("Itinerary saved successfully!");
+    setShowModal(false); 
   } catch (error) {
     console.error("Error saving itinerary:", error.response?.data || error.message);
     alert("Failed to save itinerary.");
@@ -263,9 +268,31 @@ useEffect(() => {
 }, [selectedShop]);
 
   if (loadError) return <div>Error loading Google Maps API</div>;
-
+  
   return (
     <div className="w-full flex flex-col ~space-y-6/8">
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h2 className="text-xl font-bold mb-4">Enter Itinerary Title</h2>
+            <input
+              type="text"
+              className="border p-2 w-full"
+              placeholder="Enter title"
+              value={itineraryTitle}
+              onChange={(e) => setItineraryTitle(e.target.value)}
+            />
+            <div className="mt-4 flex justify-end space-x-2">
+              <button className="bg-gray-400 text-white px-4 py-2 rounded" onClick={() => setShowModal(false)}>
+                Cancel
+              </button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={saveItinerary}>
+                Save
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <section className="map-section">
         {isLoaded ? (
           <GoogleMap mapContainerStyle={{ width: "100%", height: "400px" }} center={center} zoom={12} onLoad={onLoad} onUnmount={onUnmount}>
@@ -401,12 +428,10 @@ useEffect(() => {
         </section>
       </section>
      
-      <button 
-        onClick={saveItinerary}
-        className="bg-green-500 text-white px-4 py-2 rounded mt-4 hover:bg-green-600 transition"
-      >
+      <button className="bg-blue-500 text-white p-2 rounded" onClick={() => setShowModal(true)}>
         Save Itinerary
       </button>
+
 
     </div>
   );

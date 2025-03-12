@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
-import { fetchProfile } from "../services/api";
+import { fetchProfile, fetchUserItineraries } from "../services/api";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Loader2, Edit, Trash2 } from "lucide-react";
 import { updateProfile } from "../services/api";
 import { uploadImage } from "../services/api";
-
+import { AnimatePresence, motion } from "framer-motion";
 const UserProfile = () => {
   const [profile, setProfile] = useState(null);
   
   const [isEditing, setIsEditing] = useState(false);
   const [isEditingPreferences, setIsEditingPreferences] = useState(false);
-  
+  const [itineraries, setItineraries] = useState([]);
+  const [expanded, setExpanded] = useState(null);
+
+
+  const toggleExpand = (id) => {
+    setExpanded(expanded === id ? null : id);
+  };
 
   const handleSave = async () => {
     try {
@@ -67,7 +72,8 @@ const UserProfile = () => {
   
   const navigate = useNavigate();
 
-  useEffect(() => {
+   // Fetch Profile (already used in another function)
+   useEffect(() => {
     const loadProfile = async () => {
       try {
         const { data } = await fetchProfile();
@@ -76,11 +82,26 @@ const UserProfile = () => {
           preferences: data.preferences || { theme: "Light", notifications: false, language: "English" },
         });
       } catch (err) {
-        console.error(err);
+        console.error("Error fetching profile:", err);
       }
     };
     loadProfile();
   }, []);
+
+  // Fetch Itineraries when profile is set
+  useEffect(() => {
+    if (profile?._id) {
+      console.log("Fetching itineraries for userId:", profile._id);
+      fetchUserItineraries(profile._id)
+        .then((itinerariesData) => {
+          setItineraries(itinerariesData);
+          console.log("Fetched Itineraries:", itinerariesData);
+        })
+        .catch((err) => {
+          console.error("Error fetching itineraries:", err);
+        });
+    }
+  }, [profile]); // Runs when profile updates
   
 
   const handleLogout = () => {
@@ -258,68 +279,60 @@ const UserProfile = () => {
         {/* User Preferences Card */}
         <div className="p-6">
           <div className="bg-gray-50 p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">User Preferences</h3>
-              <button
-                onClick={() => setIsEditingPreferences(!isEditingPreferences)}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-              >
-                {isEditingPreferences ? 'Cancel' : 'Edit Preferences'}
-              </button>
-            </div>
-            {isEditingPreferences ? (
-              <div className="mt-4 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Theme</label>
-                  <select
-                    name="theme"
-                    value={profile.preferences?.theme || "Light"}
-                    onChange={handlePreferenceChange}
-                    className="w-full p-2 border rounded-lg"
-                  >
-                    <option value="Light">Light</option>
-                    <option value="Dark">Dark</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Notifications</label>
-                  <input
-                    type="checkbox"
-                    name="notifications"
-                    checked={profile.preferences.notifications}
-                    onChange={handlePreferenceChange}
-                    className="mt-2"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Language</label>
-                  <select
-                    name="language"
-                    value={profile.preferences.language}
-                    onChange={handlePreferenceChange}
-                    className="w-full p-2 border rounded-lg"
-                  >
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <option value="French">French</option>
-                  </select>
-                </div>
-                <button
-                  onClick={handleSavePreferences}
-                  className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-300"
-                >
-                  Save Preferences
-                </button>
-              </div>
+            <h3 className="text-lg font-semibold text-gray-800 mb-4">My Itineraries</h3>
+
+            {itineraries?.length === 0 ? (
+              <p className="text-gray-500">No itineraries found.</p>
             ) : (
-              <div className="mt-4 space-y-2">
-                <p><strong>Theme:</strong> {profile.preferences.theme}</p>
-                <p><strong>Notifications:</strong> {profile.preferences.notifications ? 'Enabled' : 'Disabled'}</p>
-                <p><strong>Language:</strong> {profile.preferences.language}</p>
+              <div className="space-y-4">
+                {itineraries.map((itinerary) => (
+                  <div key={itinerary._id} className="bg-white shadow-md p-4 rounded-lg">
+                    <button
+                      onClick={() => toggleExpand(itinerary._id)}
+                      className="w-full flex justify-between items-center text-left font-semibold text-gray-700 hover:text-blue-600 transition"
+                    >
+                      {itinerary.title}
+                      <span>{expanded === itinerary._id ? "▲" : "▼"}</span>
+                    </button>
+
+                    {/* Use AnimatePresence to properly handle exit animations */}
+                    <AnimatePresence>
+                      {expanded === itinerary._id && (
+                        <motion.div
+                          key={itinerary._id}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0, transition: { duration: 0.2 } }}
+                          className="mt-2 text-gray-600"
+                        >
+                          <p><strong>Destination:</strong> {itinerary.province || "N/A"}</p>
+                          <p><strong>Stay Period From:</strong> {itinerary.stayPeriodFrom || "N/A"}</p>
+                          <p><strong>Stay Period To:</strong> {itinerary.stayPeriodTo || "N/A"}</p>
+                          <p><strong>Number of travelers:</strong> {itinerary.noOfTravellers || "N/A"}</p>
+
+                          <p>
+                            <strong>Accommodations:</strong> 
+                            {itinerary.accommodation?.nameOfEstablishments}, {itinerary.accommodation?.address}
+                          </p>
+
+                          {/* ✅ Fix for displaying tourist spots properly */}
+                          <p><strong>Spots:</strong> {itinerary.touristSpots?.map(spot => spot.nameOfAttractions).join(", ") || "N/A"}</p>
+
+                          {/* ✅ Fix for displaying shops properly */}
+                          <p><strong>Shops:</strong> {itinerary.shops?.map(shop => shop.name_of_restaurant).join(", ") || "N/A"}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
+
+
+                  </div>
+                ))}
               </div>
             )}
           </div>
         </div>
+
       </div>
     </div>
   );

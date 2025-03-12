@@ -7,6 +7,10 @@ const itinerarySchema = mongoose.Schema(
         ref: "User", // Reference to the User model
         required: true,
       },
+      title: {
+        type: String,
+        required: true,
+      },
       province: {
         type: String,
         required: true,

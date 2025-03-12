@@ -55,4 +55,17 @@ export const fetchFilteredFood = (category) =>
 
 export const saveItineraryAPI = (itineraryData) => API.post("/api/users/save_itinerary", itineraryData);
 
+export const fetchUserItineraries = async (userId) => {
+  try {
+    console.log("Fetching itineraries for userId:", userId);  // Debugging
+    const response = await API.get(`/api/itineraries/info?userId=${encodeURIComponent(userId)}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user itineraries:", error.response?.data || error);
+    throw error;
+  }
+};
+
+
+
 export default API;
