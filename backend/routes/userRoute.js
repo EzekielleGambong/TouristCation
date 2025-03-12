@@ -59,10 +59,10 @@
     try {
       const {
         fname, lname, email, password, role, adminKey, address, region,
-        city, country, zip, phonenumber, photo = '',
+        city, country, phonenumber, photo = '',
         typeOfAttractions = '', category = '', travelStylePrediction = '',
         storeTypePreference = '', average_price_range = 0, 
-        ambiance = '', popularity = '', foodPrediction = ''
+        ambiance = '', popularity = '', foodPrediction = '', barangay = ''
       } = req.body;
 
       // Ensure only users with a valid adminKey can sign up as admin
@@ -86,7 +86,6 @@
         region,
         city,
         country,
-        zip,
         phonenumber,
         photo,
         typeOfAttractions,
@@ -96,6 +95,7 @@
         ambiance,
         foodPrediction,
         popularity,
+        barangay,
         storeTypePreference,
       });
 

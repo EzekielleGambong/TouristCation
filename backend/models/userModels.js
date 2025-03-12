@@ -9,8 +9,9 @@ const userSchema = mongoose.Schema({
   address: { type: String, required: false },
   region: { type: String, required: false },
   city: { type: String, required: false },
+  city: { type: String, required: false },
+  barangay: { type: String, required: false },
   country: { type: String, required: false },
-  zip: { type: Number, required: false },
   phonenumber: { type: Number, required: false },
   photo: { type: String }, 
   typeOfAttractions: { type: String, required: false },
@@ -21,7 +22,6 @@ const userSchema = mongoose.Schema({
   popularity: { type: String, required: false },
   foodPrediction: { type: String, required: false },
   storeTypePreference: { type: String, required: false },
-  country: { type: String, required: false },
 }, { timestamps: true });
 
 export const User = mongoose.model('User', userSchema);

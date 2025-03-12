@@ -250,7 +250,7 @@ const UserProfile = () => {
                     <p><strong>Email:</strong> {profile.email}</p>
                     <p><strong>Account Created:</strong> {profile.createdAt}</p>
                     <p><strong>Phone:</strong> {profile.phone}</p>
-                    <p><strong>Address:</strong> {profile.address}, {profile.city}, {profile.province}, {profile.country}, {profile.zip}</p>
+                    <p><strong>Address:</strong> {profile.address} {profile.barangay} {profile.city} {profile.region} {profile.country}</p>
                   </div>
                 </>
               )}
@@ -314,11 +314,7 @@ const UserProfile = () => {
                             <strong>Accommodations:</strong> 
                             {itinerary.accommodation?.nameOfEstablishments}, {itinerary.accommodation?.address}
                           </p>
-
-                          {/* ✅ Fix for displaying tourist spots properly */}
                           <p><strong>Spots:</strong> {itinerary.touristSpots?.map(spot => spot.nameOfAttractions).join(", ") || "N/A"}</p>
-
-                          {/* ✅ Fix for displaying shops properly */}
                           <p><strong>Shops:</strong> {itinerary.shops?.map(shop => shop.name_of_restaurant).join(", ") || "N/A"}</p>
                         </motion.div>
                       )}

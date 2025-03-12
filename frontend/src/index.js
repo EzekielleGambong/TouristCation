@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-
+import ScrollToTop from "./ScrollToTop.js"; 
 // # ~ ~ ~ ~ ~ # CSS # ~ ~ ~ ~ ~ # //
 import "./index.css";
 
@@ -48,8 +48,7 @@ export default function TouristCation() {
 
   return (
     <BrowserRouter>
-    {/* Lock Screen (renders globally when session is locked) */}
-    {/* <LockScreen /> */}
+    <ScrollToTop />
       <Routes>
         {/* Redirect root path to Signup */}
         <Route path="/" element={<Navigate to="/signup" replace />} />

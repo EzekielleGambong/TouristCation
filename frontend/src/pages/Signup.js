@@ -3,13 +3,36 @@ import { useNavigate } from "react-router-dom";
 import { signupUser } from "../services/api";
 import { motion } from "framer-motion";
 import logo from '../images/4.png';
-
+const regions = {
+  "NCR": ["Caloocan", "Las Piñas", "Makati", "Malabon", "Mandaluyong", "Manila", "Marikina", "Muntinlupa", "Navotas", "Parañaque", "Pasay", "Pasig", "Pateros", "Quezon City", "San Juan", "Taguig", "Valenzuela"],
+  "REGION I": ["Ilocos Norte", "Ilocos Sur", "La Union", "Pangasinan"],
+  "REGION II": ["Batanes", "Cagayan", "Isabela", "Nueva Vizcaya", "Quirino"],
+  "REGION III": ["Aurora", "Bataan", "Bulacan", "Nueva Ecija", "Pampanga", "Tarlac", "Zambales"],
+  "REGION IV-A": ["Batangas", "Cavite", "Laguna", "Quezon", "Rizal"],
+  "MIMAROPA": ["Marinduque", "Occidental Mindoro", "Oriental Mindoro", "Palawan", "Romblon"],
+  "REGION V": ["Albay", "Camarines Norte", "Camarines Sur", "Catanduanes", "Masbate", "Sorsogon"],
+  "CAR": ["Abra", "Apayao", "Benguet", "Ifugao", "Kalinga", "Mountain Province"],
+  "REGION VI": ["Aklan", "Antique", "Capiz", "Guimaras", "Iloilo"],
+  "NIR": ["Negros Occidental", "Negros Oriental", "Siquijor"],
+  "REGION VII": ["Bohol", "Cebu"],
+  "REGION VIII": ["Biliran", "Eastern Samar", "Leyte", "Northern Samar", "Samar", "Southern Leyte"],
+  "REGION IX": ["Zamboanga del Norte", "Zamboanga del Sur", "Zamboanga Sibugay"],
+  "REGION X": ["Bukidnon", "Camiguin", "Lanao del Norte", "Misamis Occidental", "Misamis Oriental"],
+  "REGION XI": ["Davao de Oro", "Davao del Norte", "Davao del Sur", "Davao Occidental", "Davao Oriental"],
+  "REGION XII": ["Cotabato", "Sarangani", "South Cotabato", "Sultan Kudarat"],
+  "REGION XIII": ["Agusan del Norte", "Dinagat Islands", "Surigao del Norte", "Surigao del Sur"],
+  "BARMM": ["Basilan", "Lanao del Sur", "Maguindanao del Norte", "Maguindanao del Sur", "Tawi-Tawi", "Sulu"]
+};
 function Signup() {
   const [formData, setFormData] = useState({
     fname: "",
     lname: "",
     email: "",
     password: "",
+    country: "Philippines",
+    region: "",
+    city: "",
+    barangay: "",
     role: "user",
     adminKey: "",
   });
@@ -20,7 +43,6 @@ function Signup() {
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return regex.test(password);
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.fname || !formData.lname || !formData.email || !formData.password) {
@@ -93,6 +115,15 @@ function Signup() {
           <div>
             <input
               type="text"
+              placeholder="Country"
+              value={formData.country}
+              readOnly
+              className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-gray-100 cursor-not-allowed"
+            />
+          </div>
+          <div>
+            <input
+              type="text"
               placeholder="Address"
               value={formData.address}
               onChange={(e) => 
@@ -101,12 +132,22 @@ function Signup() {
               className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <input type="text" placeholder="Region" value={formData.region} onChange={(e) => setFormData({ ...formData, region: e.target.value })} className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            <input type="text" placeholder="City" value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            <input type="text" placeholder="Country" value={formData.country} onChange={(e) => setFormData({ ...formData, country: e.target.value })} className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-            <input type="number" placeholder="ZIP Code" value={formData.zip} onChange={(e) => setFormData({ ...formData, zip: e.target.value })} className="w-full px-4 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" />
-          </div>
+          <select value={formData.region} onChange={(e) => setFormData({ ...formData, region: e.target.value, province: "" })} className="w-full px-4 py-3 border rounded-lg">
+            <option value="">Select Region</option>
+            {Object.keys(regions).map((region) => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+          
+          <select value={formData.city} onChange={(e) => setFormData({ ...formData, city: e.target.value })} className="w-full px-4 py-3 border rounded-lg" disabled={!formData.region}>
+            <option value="">Select Province/City</option>
+            {formData.region && regions[formData.region].map((province) => (
+              <option key={province} value={province}>{province}</option>
+            ))}
+          </select>
+          
+          <input type="text" placeholder="Barangay" value={formData.barangay} onChange={(e) => setFormData({ ...formData, barangay: e.target.value })} className="w-full px-4 py-3 border rounded-lg" />
+          
           <div>
             <select
               value={formData.role}
