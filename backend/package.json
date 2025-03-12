@@ -22,7 +22,8 @@
     "mongodb": "^6.10.0",
     "mongoose": "^8.8.0",
     "multer": "^1.4.5-lts.1",
-    "nodemailer": "^6.9.16",
+    "nodemailer": "^6.10.0",
+    "otp-generator": "^4.0.1",
     "react-hook-form": "^7.53.1",
     "react-router-dom": "^6.27.0"
   },
