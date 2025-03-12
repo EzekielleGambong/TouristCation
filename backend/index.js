@@ -5,6 +5,7 @@ import accRoute from "./routes/accommodationRoute.js"
 import spotsRoute from "./routes/touristspotsRoute.js"
 import userRoutes from './routes/userRoute.js';
 import foodRoutes from './routes/foodRoute.js';
+import itineraryRoutes from './routes/itineraryRoute.js';
 import savedLocationRoutes from './routes/savedLocationRoute.js';
 import path from "path";
 import { fileURLToPath } from "url";
@@ -27,13 +28,14 @@ dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 const mongoDBURL = process.env.mongoDBURL;
 app.use("/api/uploads", express.static(path.join(__dirname, "uploads")));
 app.use('/api/accommodation', accRoute);
 app.use('/api/touristspots', spotsRoute);
 app.use('/api/users', userRoutes);
 app.use('/api/food', foodRoutes);
+// app.use('/api/itineraries', itineraryRoutes);
 app.use('/api/savedLocations', savedLocationRoutes);
 app.get('/api/', (request, response) => {
     console.log(request);

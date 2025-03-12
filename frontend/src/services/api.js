@@ -52,4 +52,7 @@ export const fetchAttractionsByTravelStyle = (travelStyle) =>
 export const fetchFilteredFood = (category) =>
   API.get(`/api/food/filtered?category=${encodeURIComponent(category)}`);
 
+
+export const saveItineraryAPI = (itineraryData) => API.post("/api/users/save_itinerary", itineraryData);
+
 export default API;

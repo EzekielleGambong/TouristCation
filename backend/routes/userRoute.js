@@ -5,7 +5,8 @@
   import { upload } from "../middlewares/MulterMiddleware.js"; 
   import { Accommodationinformation } from '../models/accommodationModels.js';
   import { Attractioninformation } from '../models/tourists.js';
- 
+  import { Itinerary } from "../models/itineraryModel.js";
+
   import dotenv from 'dotenv';
   dotenv.config();
 
@@ -286,5 +287,33 @@ router.get('/total-acco', authenticateJWT, authorizeRole('admin'), async (req, r
   }
 });
 
+
+router.post("/save_itinerary", authenticateJWT, async (req, res) => {
+  try {
+      const {
+          userId,
+          province,
+          noOfTravellers,
+          stayPeriodFrom,
+          stayPeriodTo,
+          touristSpots,
+          shops
+      } = req.body;
+
+      // Check required fields
+      if (!userId || !province || !noOfTravellers || !stayPeriodFrom || !stayPeriodTo || !touristSpots.length || !shops.length) {
+          return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const itinerary = new Itinerary(req.body);
+      await itinerary.save();
+      res.status(201).json({ message: "Itinerary saved successfully!" });
+  } catch (error) {
+      console.error("Error saving itinerary:", error);
+      res.status(500).json({ error: "Failed to save itinerary", details: error.message });
+  }
+});
+
+  
 
   export default router;

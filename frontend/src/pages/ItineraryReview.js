@@ -1,11 +1,12 @@
 import { useStorePlan } from "../hooks/useStore";
-import { fetchProfile } from "../services/api"; 
+import { fetchProfile, saveItineraryAPI} from "../services/api"; 
 import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { GoogleMap, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import Papa from "papaparse";
 import foodDataCSV from "../pages/data.csv";
 import PropTypes from "prop-types";
 import shopDataCSV from "../pages/shops.csv"; 
+import { useNavigate } from "react-router-dom";
 function formatDate(data) {
   return new Date(data).toLocaleDateString("en-US", {
     year: "numeric",
@@ -38,9 +39,19 @@ AccommodationInformation.propTypes = {
 };
 
 export default function ItineraryReview() {
+  const navigate = useNavigate();
   const { province, accommodation, stayPeriodFrom, stayPeriodTo, noOfTravellers, excessBudget, touristSpots = [], food = [] } = useStorePlan((state) => state);
-
+  const [userId, setUserId] = useState(null);
   const [selectedShop, setSelectedShop] = useState(null);
+  const [selectedShops, setSelectedShops] = useState([]); 
+
+  const toggleShopSelection = (shop) => {
+    setSelectedShops((prev) =>
+      prev.some((s) => s.name_of_restaurant === shop.name_of_restaurant)
+        ? prev.filter((s) => s.name_of_restaurant !== shop.name_of_restaurant)
+        : [...prev, shop]
+    );
+  };
 
   // Close when clicking outside
   const handleOutsideClick = (e) => {
@@ -57,8 +68,33 @@ export default function ItineraryReview() {
       return { lat, lng };
     });
   }, [touristSpots]);
-  
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    async function getUserProfile() {
+      try {
+        const profile = await fetchProfile();
+        console.log("User profile data:", profile); // Check the structure of the profile object
+        
+        if (profile && profile.data && profile.data._id) {
+          // Set userId only if it's not already set (to avoid re-renders)
+          if (userId !== profile.data._id) {
+            setUserId(profile.data._id);
+          }
+        } else {
+          console.error("Profile or _id not found!");
+        }
+      } catch (error) {
+        console.error("Failed to fetch user profile:", error);
+      } finally {
+        setLoading(false); // Finished loading the profile
+      }
+    }
 
+    getUserProfile();
+  }, []); // Empty dependency array to run once when the component mounts
+
+  
+  
   // Compute map center as the average of all selected points
   const center = useMemo(() => {
     if (points.length === 0) return { lat: 16.326855, lng: 120.3625725 };
@@ -193,7 +229,39 @@ useEffect(() => {
   console.log("📍 Shop Points:", shopPoints);
 }, [shopPoints]);
 
+const saveItinerary = async () => {
+    
+  const itineraryData = {
+    userId,
+    province,
+    accommodation,
+    stayPeriodFrom,
+    stayPeriodTo,
+    noOfTravellers,
+    touristSpots,
+    food,
+    shops: selectedShops.map(shop => ({
+      name_of_restaurant: shop.name_of_restaurant,
+      description: shop.description,
+      coordination: shop.coordination,
+  })),
+
+  };
   
+  try {
+    saveItineraryAPI(itineraryData);
+    navigate("/page/home");
+    alert("Itinerary saved successfully!");
+  } catch (error) {
+    console.error("Error saving itinerary:", error.response?.data || error.message);
+    alert("Failed to save itinerary.");
+  }
+  
+};
+useEffect(() => {
+  console.log("Selected Shop Updated:", selectedShop);
+}, [selectedShop]);
+
   if (loadError) return <div>Error loading Google Maps API</div>;
 
   return (
@@ -243,7 +311,6 @@ useEffect(() => {
             </li>
           ))}
         </ul>
-
       </section>
 
       <section>
@@ -277,34 +344,52 @@ useEffect(() => {
         )}
 
         {/* Shop Details Section */}
+  
         <section className="mt-6">
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Shop Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {shopList.map((shop, index) => (
-              <div 
-                key={index} 
-                className="p-4 bg-white rounded-lg shadow-lg border border-gray-200 cursor-pointer hover:bg-gray-100 transition"
+            {shopList.map((shop) => (
+              <div
+                key={shop.name_of_restaurant}
+                className={`p-4 border rounded-lg cursor-pointer transition ${
+                  selectedShops.some((s) => s.name_of_restaurant === shop.name_of_restaurant)
+                    ? "bg-blue-300"
+                    : "bg-white hover:bg-gray-100"
+                }`}
                 onClick={() => setSelectedShop(shop)}
               >
                 <h3 className="text-lg font-semibold text-gray-900">{shop.name_of_restaurant}</h3>
+                <p>{shop.description}</p>
+
+                <button
+                  className="mt-2 p-2 bg-green-500 text-white rounded w-full"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent drawer opening when clicking the button
+                    toggleShopSelection(shop);
+                  }}
+                >
+                  {selectedShops.some((s) => s.name_of_restaurant === shop.name_of_restaurant)
+                    ? "Deselect"
+                    : "Choose"}
+                </button>
               </div>
             ))}
-            
+
             {/* Collapsible Drawer */}
             {selectedShop && (
-              <div 
-                id="drawer-bg" 
+              <div
+                id="drawer-bg"
                 className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center"
                 onClick={handleOutsideClick}
               >
                 <div className="bg-white p-6 rounded-lg w-3/4 md:w-1/2 max-h-[80vh] overflow-y-auto animate-fadeIn">
-                  <h3 className="text-xl font-bold">{selectedShop.name}</h3>
+                  <h3 className="text-xl font-bold">{selectedShop.name_of_restaurant}</h3>
                   <p className="mt-2">{selectedShop.description}</p>
                   <p className="text-gray-500 mt-2 text-sm">
                     <strong>Coordinates:</strong> {selectedShop.coordination}
                   </p>
-                  <button 
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition" 
+                  <button
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
                     onClick={() => setSelectedShop(null)}
                   >
                     Close
@@ -315,7 +400,13 @@ useEffect(() => {
           </div>
         </section>
       </section>
-
+     
+      <button 
+        onClick={saveItinerary}
+        className="bg-green-500 text-white px-4 py-2 rounded mt-4 hover:bg-green-600 transition"
+      >
+        Save Itinerary
+      </button>
 
     </div>
   );

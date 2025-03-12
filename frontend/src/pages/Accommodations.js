@@ -134,6 +134,11 @@ function Plan() {
     toggleModal();
   };
 
+  useEffect(() => {
+    useStorePlan.setState({ accommodation: "" }); // Reset selected accommodation
+  }, []);
+  
+  
   return (
     <form id="selected_accomomdation" onSubmit={handleSetAccommodation} className="flex flex-col rounded-xl border border-black bg-gray-300 p-4 gap-y-3">
       <div className="flex flex-col space-y-1">
