@@ -12,20 +12,25 @@ import { fileURLToPath } from "url";
 const app = express();
 
 import cors from 'cors';
-
+const allowedOrigins = [
+    "http://localhost:3000",   // For local development
+    "http://18.136.142.232",
+    "https://www.toursitcation.site",
+    "https://toursitcation.site"
+];
 app.use(cors({
-    origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    origin: allowedOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
+
+app.options('*', cors());  // Handle preflight request for all routes
 app.use(express.json());
-// app.use(cors());
 
 
 import dotenv from 'dotenv';
 dotenv.config();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 8080;
@@ -47,7 +52,7 @@ mongoose
   .connect(mongoDBURL)
   .then(() => {
     console.log('App connected to database');
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
       console.log(`App is listening to port: ${PORT}`);
     });
   })
