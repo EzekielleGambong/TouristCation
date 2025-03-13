@@ -6,9 +6,22 @@
   import { Accommodationinformation } from '../models/accommodationModels.js';
   import { Attractioninformation } from '../models/tourists.js';
   import { Itinerary } from "../models/itineraryModel.js";
+  import nodemailer from 'nodemailer';
+  import otpGenerator from 'otp-generator';
+
 
   import dotenv from 'dotenv';
   dotenv.config();
+
+  const OTPStore = new Map();
+  // Email Transporter
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL,
+      pass: process.env.EMAIL_PASSWORD,
+    },
+  });
 
   const router = express.Router();
   const JWT_SECRET = '51933b8a4f51b73a5d9308eebc7f4012357eadc9de1e811a88ba915394f1464f170b92131ae5fe6d5b9b38784aba6b1e2b21e77325b92e2ecdf4cfcf1f1b37a2';
@@ -53,6 +66,157 @@
     }
     next();
   };
+  
+  router.post("/send-otp", async (req, res) => {
+    console.log("Received req.body:", req.body); // Debugging line
+
+    const { email, role } = req.body;
+    console.log("Extracted email:", email); // Debugging line
+
+    try {
+        let recipientEmail = email; // Default: normal user
+
+        // If admin, override with the fixed admin email
+        if (role === "admin") {
+            recipientEmail = process.env.ADMIN_EMAIL;
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ email: recipientEmail });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already in use" });
+        }
+
+        // Generate OTP
+        const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
+        console.log("Generated OTP:", otp);
+
+        // Store OTP with expiration
+        OTPStore.set(recipientEmail, { otp, expiresAt: Date.now() + 300000 }); // 5 min expiry
+        console.log("OTP stored for", recipientEmail, ":", OTPStore.get(recipientEmail));
+
+        // Send OTP email
+        try {
+            const info = await transporter.sendMail({
+                from: process.env.EMAIL, // Sender email
+                to: recipientEmail, // Sends to either user or admin email
+                subject: "TouristCation OTP Code",
+                html: `
+                    <p>Dear ${role === "admin" ? "Admin" : "User"},</p>
+                
+                    <p>Thank you for your request!</p>
+                
+                    <p>Your One-Time Password (OTP) code is:</p>
+                
+                    <p><strong>${otp}</strong></p>
+                
+                    <p>Please enter this code in the appropriate field to proceed with your transaction.</p>
+                
+                    <p><em>Note:</em> This OTP code will expire in 10 minutes for security purposes. If you did not request this code, please disregard this email.</p>
+                
+                    <p>If you need any assistance, feel free to contact our support team at <a href="mailto:support@touristcation.com">support@touristcation.com</a>.</p>
+                
+                    <p>Best regards,<br> The TouristCation Team</p>
+                
+                    <p><em>For security reasons, do not share your OTP with anyone. Always make sure you are on the official website or app before entering sensitive information.</em></p>
+                `,
+            });
+
+            console.log("Email sent successfully:", info.response);
+            return res.status(200).json({ message: "OTP sent to email" });
+
+        } catch (emailError) {
+            console.error("Email sending error:", emailError);
+            return res.status(500).json({ message: "Failed to send OTP email" });
+        }
+
+    } catch (error) {
+        console.error("Internal Server Error:", error);
+        return res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+  
+  // ✅ Step 2: Verify OTP and Create Account
+  router.post('/verify-otp', async (req, res) => {
+    try {
+        const {
+            fname, lname, email, password, role, adminKey, address, region,
+            city, country, phonenumber, photo = '',
+            typeOfAttractions = '', category = '', travelStylePrediction = '',
+            storeTypePreference = '', average_price_range = 0,
+            ambiance = '', popularity = '', foodPrediction = '', barangay = '',
+            otp
+        } = req.body;
+
+        console.log("Received OTP verification request:", { email, otp, role });
+
+        // Use the correct email for OTP lookup
+        let recipientEmail = email;
+        if (role === "admin") {
+            recipientEmail = process.env.ADMIN_EMAIL;
+        }
+
+        // Check OTP
+        const storedOTP = OTPStore.get(recipientEmail);
+        console.log(`Stored OTP for ${recipientEmail}:`, storedOTP);
+
+        if (!storedOTP) {
+            return res.status(400).json({ message: "OTP expired or not found" });
+        }
+
+        console.log("Received OTP:", otp, "Stored OTP:", storedOTP?.otp, "Expires at:", storedOTP?.expiresAt);
+
+        if (storedOTP.otp !== otp) {
+            return res.status(400).json({ message: "Invalid OTP" });
+        }
+
+        if (Date.now() > storedOTP.expiresAt) {
+            OTPStore.delete(recipientEmail);
+            return res.status(400).json({ message: "OTP expired" });
+        }
+
+        // Ensure only users with a valid adminKey can sign up as admin
+        if (role === "admin" && adminKey !== process.env.ADMIN_KEY) {
+            return res.status(403).json({ message: "Unauthorized to create admin account" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+            fname,
+            lname,
+            email,
+            password: hashedPassword,
+            role: role || "user",
+            address,
+            region,
+            city,
+            country,
+            phonenumber,
+            photo,
+            typeOfAttractions,
+            category,
+            travelStylePrediction,
+            average_price_range,
+            ambiance,
+            foodPrediction,
+            popularity,
+            barangay,
+            storeTypePreference,
+        });
+
+        console.log("User registered:", newUser.email);
+            
+        // Remove OTP after verification
+        OTPStore.delete(recipientEmail);
+
+        res.status(201).json({ message: "User registered successfully", user: newUser });
+    } catch (error) {
+        console.error("Error during OTP verification:", error);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
   // Sign Up
   router.post('/signup', async (req, res) => {
