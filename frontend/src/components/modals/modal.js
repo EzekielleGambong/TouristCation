@@ -7,7 +7,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 function Accommodation({ settings, onClose }) {
   const { setAccommodation } = useStorePlan((state) => state);
   const [latitude, longitude] = settings.coordinates.split(", ").map(Number);
-
+ 
+  const formattedPrice = new Intl.NumberFormat().format(settings.price);
   return (
     <div className="relative z-50" aria-labelledby="modal-title" role="dialog" aria-modal="true">
       <div className="fixed inset-0 bg-black/60 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
@@ -51,7 +52,7 @@ function Accommodation({ settings, onClose }) {
                 </div>
 
                 <p className="font-normal ~text-xs/base">{settings.description}</p>
-                <p className="text-center font-medium ~text-lg/2xl">P{settings.price} per night</p>
+                <p className="text-center font-medium ~text-lg/2xl">P{formattedPrice} per night</p>
 
                 <button
                   type="button"
