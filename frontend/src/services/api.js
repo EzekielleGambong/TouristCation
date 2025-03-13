@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "https://www.toursitcation.site" });
+const API = axios.create({ baseURL: "http://localhost:8080" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
@@ -66,6 +66,25 @@ export const fetchUserItineraries = async (userId) => {
   }
 };
 
+export const sendOtpAPI = async (formData) => {
+  try {
+    const response = await API.post("/api/users/send-otp", formData);
+    return response.data;
+  } catch (error) {
+    console.error("Error sending OTP:", error.response?.data || error);
+    throw new Error(error.response?.data?.message || "Failed to send OTP");
+  }
+};
 
+
+export const verifyOtpAPI = async (formData, otp) => {
+  try {
+    const response = await API.post("/api/users/verify-otp", { ...formData, otp });
+    return response.data;
+  } catch (error) {
+    console.error("OTP Verification Error:", error.response?.data || error);
+    throw new Error(error.response?.data?.message || "Invalid OTP");
+  }
+};
 
 export default API;
