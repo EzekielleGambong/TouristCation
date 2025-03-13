@@ -46,7 +46,7 @@ function Signup() {
     setData({ ...data, [e.target.name]: e.target.value });
   };
 
-  const [error, setError] = useState("");
+  const [error, setError] = useState(null);
   const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
   const validatePassword = (password) => {
