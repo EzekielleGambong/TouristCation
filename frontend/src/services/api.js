@@ -1,16 +1,22 @@
 import axios from "axios";
 
-const API = axios.create({ baseURL: "http://localhost:8080" });
+const API = axios.create({ baseURL: "https://www.touristcation.site" });
 
 API.interceptors.request.use((req) => {
   const token = localStorage.getItem("token");
   console.log("Token in interceptor:", token);
-  if (token && !req.url.includes("/api/users/signup") && !req.url.includes("/api/users/login")) {
+  if (
+    token &&
+    !req.url.includes("/api/users/signup") &&
+    !req.url.includes("/api/users/login") &&
+    !req.url.includes("/api/users/send-otp") &&
+    !req.url.includes("/api/users/verify-otp")
+  ) {
     req.headers.Authorization = `Bearer ${token}`;
   }
-  console.log("Request headers:", req.headers);
   return req;
 });
+
 
   
 export const uploadImage = (formData) =>

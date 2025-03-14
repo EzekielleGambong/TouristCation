@@ -51,7 +51,7 @@
         return res.status(403).json({ message: 'Session locked due to inactivity' });
       }
 
-      // Update user activity
+      // Update user activitys
       userActivity.set(decoded.id, Date.now());
       next();
     } catch (err) {
